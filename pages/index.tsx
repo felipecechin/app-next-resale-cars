@@ -8,8 +8,8 @@ export default function Home(): JSX.Element {
                 pageTitle='Dashboard'
             />
             <MainContent>
-                <div className="bg-gray-100 w-full rounded-lg">
-                    <h2>teste</h2>
+                <div className="bg-gray-100 w-full rounded-lg min-h-[32rem]">
+
                 </div>
             </MainContent>
             {/* <Footer/> */}

@@ -14,6 +14,7 @@ function Header({ pageTitle }: HeaderProps): JSX.Element {
             return (
                 <li key={menuOption.key}>
                     <Link
+                        className="text-gray-600 font-semibold uppercase hover:bg-gray-600 hover:text-white"
                         href={menuOption.href}
                     >
                         {React.createElement(menuOption.icon, { className: 'w-5 h-5' })}

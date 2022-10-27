@@ -11,7 +11,7 @@ export const menuOptions = [
         key: 'cars',
         label: 'Carros',
         icon: FaCar,
-        href: '/cars/list'
+        href: '/cars'
     },
     {
         key: 'history',
