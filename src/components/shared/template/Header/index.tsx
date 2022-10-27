@@ -4,7 +4,11 @@ import Link from 'next/link';
 import _ from 'lodash'
 import { menuOptions } from '@/utils/menuOptions';
 
-function Header(): JSX.Element {
+interface HeaderProps {
+    pageTitle: string;
+}
+
+function Header({ pageTitle }: HeaderProps): JSX.Element {
     const headerMenuOptions = useMemo(() => {
         return _.map(menuOptions, (menuOption) => {
             return (
@@ -45,7 +49,7 @@ function Header(): JSX.Element {
                     </div>
                 </div>
                 <h1 className="mt-12 text-3xl font-bold text-white">
-                    Dashboard
+                    {pageTitle}
                 </h1>
             </div>
         </header>
