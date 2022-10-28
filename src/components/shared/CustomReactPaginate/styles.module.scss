@@ -1,0 +1,31 @@
+.container {
+    @apply relative z-0 inline-flex rounded-md shadow-sm -space-x-px;
+
+    svg {
+        @apply h-5 w-5 p-1;
+    }
+}
+
+.pageLink {
+    @apply bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-2 py-1 border text-sm font-medium;
+}
+
+.activeLink {
+    @apply z-10 bg-teal-50 border-cyan-700 text-cyan-700 relative inline-flex items-center px-2 py-1 border text-sm font-medium;
+}
+
+.previousLink {
+    @apply relative inline-flex items-center px-1 py-1 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50;
+}
+
+.nextLink {
+    @apply relative inline-flex items-center px-1 py-1 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50;
+}
+
+.disabledLink {
+    @apply bg-gray-300 hover:bg-gray-300 cursor-auto;
+}
+
+.breakLink {
+    @apply relative inline-flex items-center px-1 py-1 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50;
+}

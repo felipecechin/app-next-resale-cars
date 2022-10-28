@@ -49,7 +49,7 @@ function Drawer({ open, onClose, title, children }: DrawerProps): JSX.Element {
                                                 type="button"
                                             >
                                                 <span className="sr-only">Close panel</span>
-                                                <FaRegWindowClose aria-hidden="true" className="h-6 w-6" />
+                                                <FaRegWindowClose aria-hidden="true" className="h-8 w-8" />
                                             </button>
                                         </div>
                                         <div className="relative mt-6 flex-1 px-4 sm:px-6">

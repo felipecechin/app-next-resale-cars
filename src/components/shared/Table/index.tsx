@@ -1,37 +1,70 @@
-function Table(): JSX.Element {
+import _ from 'lodash';
+import dynamic from 'next/dynamic';
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const CustomReactPaginate = dynamic(() => import('@/components/shared/CustomReactPaginate'), {
+    ssr: false,
+})
+
+type HeaderObject = {
+    key: string;
+    label: string;
+}
+
+interface TableProps {
+    header: HeaderObject[];
+    data: { [key: string]: string | number | JSX.Element }[];
+    idObjectKey: string;
+    totalRecords: number;
+}
+
+function Table({ header, data, idObjectKey, totalRecords }: TableProps): JSX.Element {
     return (
-        <div className="overflow-x-auto">
-            <table className="table table-zebra w-full">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Name</th>
-                        <th>Job</th>
-                        <th>Favorite Color</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th>1</th>
-                        <td>Cy Ganderton</td>
-                        <td>Quality Control Specialist</td>
-                        <td>Blue</td>
-                    </tr>
-                    <tr>
-                        <th>2</th>
-                        <td>Hart Hagerty</td>
-                        <td>Desktop Support Technician</td>
-                        <td>Purple</td>
-                    </tr>
-                    <tr>
-                        <th>3</th>
-                        <td>Brice Swyre</td>
-                        <td>Tax Accountant</td>
-                        <td>Red</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <>
+            <div className="overflow-x-auto">
+                <table className="table table-zebra w-full">
+                    <thead>
+                        <tr>
+                            {_.map(header, (row) => {
+                                return (
+                                    <th
+                                        key={row.key}
+                                        scope="col"
+                                    >
+                                        {row.label}
+                                    </th>
+                                )
+                            })}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {_.map(data, (row) => {
+                            return (
+                                <tr key={row[idObjectKey] as string}>
+                                    {_.map(header, (headRow) => {
+                                        return (
+                                            <td
+                                                key={row[idObjectKey] + '-' + headRow.key}
+                                            >
+                                                {row[headRow.key]}
+                                            </td>
+                                        )
+                                    })}
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
+            </div>
+            <div className='flex items-center justify-end sm:justify-between my-2'>
+                <p className='font-normal text-sm hidden sm:block'>Mostrando {data.length} de {totalRecords} registro(s).</p>
+                <CustomReactPaginate
+                    actualPage={0}
+                    onPageClick={() => console.log('click')}
+                    pagesNumber={Math.ceil(totalRecords / 10)}
+                />
+            </div>
+        </>
     )
 }
 
