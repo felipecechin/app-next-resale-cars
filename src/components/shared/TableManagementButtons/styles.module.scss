@@ -1,27 +1,27 @@
+@mixin actionButton {
+    @apply relative inline-flex items-center px-2 py-2 border border-gray-300 text-sm font-medium focus:z-10 focus:outline-none bg-opacity-50 hover:text-white text-gray-700 focus:ring-1 focus:ring-cyan-700 focus:border-cyan-700;
+}
+
 .managementButtonsSpan {
     @apply relative z-0 inline-flex shadow-sm rounded-md;
-
-    .buttonView {
-        @apply relative inline-flex items-center px-2 py-1 rounded-l-md border border-gray-300 text-sm font-medium focus:z-10 focus:outline-none bg-opacity-50 bg-blue-300 hover:bg-blue-400 text-gray-700 focus:ring-1 focus:ring-cyan-700 focus:border-cyan-700;
-    }
 
     .buttonRoundedRight {
         @apply rounded-r-md;
     }
 
-    .buttonRoundedLeft {
-        @apply rounded-l-md;
-    }
-
     .buttonUpdate {
-        @apply relative inline-flex items-center px-2 py-1 border border-gray-300 text-sm font-medium focus:z-10 focus:outline-none bg-opacity-50 bg-green-300 hover:bg-green-400 text-gray-700 focus:ring-1 focus:ring-cyan-700 focus:border-cyan-700;
+        @include actionButton;
+
+        @apply rounded-l-md bg-green-300 hover:bg-green-600;
     }
 
     .buttonDelete {
-        @apply relative inline-flex items-center px-2 py-1 rounded-r-md border border-gray-300 text-sm font-medium focus:z-10 focus:outline-none bg-opacity-50 bg-red-300 hover:bg-red-400 text-gray-700 focus:ring-1 focus:ring-cyan-700 focus:border-cyan-700;
+        @include actionButton;
+
+        @apply rounded-r-md bg-red-300 hover:bg-red-600;
     }
 
     > button > svg {
-        @apply text-gray-700 flex-shrink-0 h-4 w-4;
+        @apply flex-shrink-0 h-4 w-4;
     }
 }
