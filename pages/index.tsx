@@ -24,8 +24,8 @@ export default function Dashboard(): JSX.Element {
                 <div className='w-full grid grid-cols-1 sm:grid-cols-2 gap-4'>
                     <div className="bg-white rounded-lg shadow-lg flex flex-col gap-2 py-4 px-4">
                         <div className='flex items-center gap-4'>
-                            <span className='p-4 bg-cyan-700 rounded-lg'>
-                                <FaCar className='text-white w-6 h-6' />
+                            <span className='p-4 rounded-lg border border-cyan-700 bg-gray-100'>
+                                <FaCar className='text-cyan-700 w-6 h-6' />
                             </span>
                             <span className='text-4xl text-gray-600 font-bold'>
                                 25
@@ -37,8 +37,8 @@ export default function Dashboard(): JSX.Element {
                     </div>
                     <div className="bg-white rounded-lg shadow-lg flex flex-col gap-2 py-4 px-4">
                         <div className='flex items-center gap-4'>
-                            <span className='p-4 bg-cyan-700 rounded-lg'>
-                                <FaCogs className='text-white w-6 h-6' />
+                            <span className='p-4 rounded-lg border border-cyan-700 bg-gray-100'>
+                                <FaCogs className='text-cyan-700 w-6 h-6' />
                             </span>
                             <span className='text-4xl text-gray-600 font-bold'>
                                 30
