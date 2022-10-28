@@ -12,9 +12,9 @@ function DrawerCarForm({ open, onClose }: DrawerCarFormProps): JSX.Element {
             open={open}
             title='Cadastro de carro'
         >
-            <div>
-                teste
-            </div>
+            <form>
+
+            </form>
         </Drawer>
     )
 }

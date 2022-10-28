@@ -2,8 +2,13 @@ import { FaPlus, FaSearch } from 'react-icons/fa';
 import { useCallback, useMemo, useState } from 'react';
 
 import DrawerCarForm from './DrawerCarForm';
+import Swal from 'sweetalert2'
 import Table from '@/components/shared/Table';
 import TableManagementButtons from '@/components/shared/TableManagementButtons';
+import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
+import withReactContent from 'sweetalert2-react-content'
+
+const mySwal = withReactContent(Swal)
 
 const carsTableHeader = [
     {
@@ -23,10 +28,76 @@ const carsTableHeader = [
 function ContentCarsPage(): JSX.Element {
     const [carFormDrawer, setCarFormDrawer] = useState(false);
 
-    const handleDeleteCar = useCallback((id: string) => {
+    const handleDeleteCar = useCallback(() => {
+        mySwal.fire({
+            title: 'Tem certeza que deseja remover o carro?',
+            cancelButtonColor: sweetAlertOptions.cancelButtonColor,
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: sweetAlertOptions.confirmButtonColor,
+            confirmButtonText: 'Sim, remover',
+            icon: 'question',
+            showCancelButton: true,
+            text: 'Esta ação é irreversível',
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                mySwal.fire({
+                    title: 'Por favor, aguarde...',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                });
+                mySwal.showLoading();
+                try {
+                    // const source = 'removeAdvertising'
+                    // const data = {
+                    //     label: advertising.label,
+                    // }
+                    // const result = await fetcher({
+                    //     type: 'post',
+                    //     data: {
+                    //         source,
+                    //         variableValues: data,
+                    //     },
+                    //     auth: token,
+                    //     checker: licenseLabel
+                    // });
+
+                    // console.log(result);
+                    // if (Object.prototype.hasOwnProperty.call(result, 'errors')) {
+                    //     MySwal.fire({
+                    //         title: 'Oops!',
+                    //         icon: 'error',
+                    //         text: getFriendlyMessage(source, result.errors[0]?.message, 'errors', language.code),
+                    //         confirmButtonColor: sweetAlertOptions.confirmButtonColor,
+                    //     })
+                    //     return;
+                    // }
+
+                    // if (Object.prototype.hasOwnProperty.call(result?.data, source)) {
+                    //     MySwal.fire({
+                    //         title: capitalizeFirstLetter(language.words.success),
+                    //         icon: 'success',
+                    //         text: getFriendlyMessage(source, result.data[source], 'success', language.code),
+                    //         confirmButtonColor: sweetAlertOptions.confirmButtonColor,
+                    //     })
+                    //     setAdvertisingsToShowOnTable((oldState) => {
+                    //         const advertisingsCopy = [...oldState];
+                    //         advertisingsCopy.splice(index, 1);
+                    //         return advertisingsCopy
+                    //     })
+                    // }
+                } catch (e) {
+                    mySwal.fire({
+                        title: 'Oops!',
+                        icon: 'error',
+                        text: 'Ocorreu algum erro ao remover carro',
+                        confirmButtonColor: sweetAlertOptions.confirmButtonColor,
+                    })
+                }
+            }
+        })
     }, []);
 
-    const handleUpdateCar = useCallback((id: string) => {
+    const handleUpdateCar = useCallback(() => {
 
     }, [])
 
@@ -34,14 +105,14 @@ function ContentCarsPage(): JSX.Element {
         return (
             <span className="flex justify-end">
                 <TableManagementButtons
-                    onDelete={() => console.log('delete')}
+                    onDelete={() => handleDeleteCar()}
                     onUpdate={() => console.log('update')}
                 />
             </span>
         )
-    }, []);
+    }, [handleDeleteCar]);
 
-    const handleCarSaved = useCallback((id: string) => {
+    const handleCarSaved = useCallback(() => {
 
     }, []);
 
