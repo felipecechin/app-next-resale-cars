@@ -3,3 +3,7 @@
 @tailwind components;
 
 @tailwind utilities;
+
+.table th:first-child {
+    z-index: 0 !important;
+}

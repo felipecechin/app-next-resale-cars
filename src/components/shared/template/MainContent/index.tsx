@@ -4,7 +4,7 @@ interface MainContentProps {
 
 function MainContent({ children }: MainContentProps): JSX.Element {
     return (
-        <main className="-mt-20 px-4 pb-12">
+        <main className="-mt-14 px-4 pb-12">
             <div className="max-w-7xl mx-auto">
                 {children}
             </div>

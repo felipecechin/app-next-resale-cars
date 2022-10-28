@@ -14,7 +14,7 @@ function Header({ pageTitle }: HeaderProps): JSX.Element {
             return (
                 <li key={menuOption.key}>
                     <Link
-                        className="text-gray-600 font-semibold uppercase hover:bg-gray-600 hover:text-white"
+                        className="text-gray-600 font-semibold uppercase hover:bg-cyan-700 hover:text-white"
                         href={menuOption.href}
                     >
                         {React.createElement(menuOption.icon, { className: 'w-5 h-5' })}
@@ -26,7 +26,7 @@ function Header({ pageTitle }: HeaderProps): JSX.Element {
     }, []);
 
     return (
-        <header className="w-full bg-gray-600 px-4 py-4">
+        <header className="w-full bg-cyan-700 px-4 py-4">
             <div className="max-w-7xl flex flex-col mx-auto pb-32">
                 <div className="navbar rounded-lg bg-white">
                     <div className="navbar-start w-full sm:w-1/2">
@@ -38,7 +38,7 @@ function Header({ pageTitle }: HeaderProps): JSX.Element {
                                 {headerMenuOptions}
                             </ul>
                         </div>
-                        <p className="normal-case text-xl ml-0 sm:ml-4">Revenda de carros</p>
+                        <p className="normal-case text-xl font-bold ml-1 sm:ml-4">Revenda de carros</p>
                     </div>
                     <div className="navbar-center hidden lg:flex">
                         <ul className="menu menu-horizontal p-0">
@@ -46,7 +46,7 @@ function Header({ pageTitle }: HeaderProps): JSX.Element {
                         </ul>
                     </div>
                     <div className="navbar-end ml-2 sm:ml-0 w-auto sm:w-1/2">
-                        <a className="link link-primary link-hover mr-2">Sair</a>
+                        <a className="link link-hover mr-2 text-cyan-700 hover:text-cyan-900">Sair</a>
                     </div>
                 </div>
                 <h1 className="mt-12 text-3xl font-bold text-white">
