@@ -3,28 +3,47 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import fetcher from '@/utils/fetcher';
 import { storeToken } from '@/utils/cookies';
 
+interface IFetchResultLoginUser {
+    id: number;
+    name: string;
+    email: string;
+}
+
+interface IFetchResponseLoginSuccess {
+    access_token: string;
+    token_type: string;
+    user: IFetchResultLoginUser;
+}
+
+interface IFetchResponseLoginError {
+    message: string;
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
     if (req.method === 'POST') {
         const body = JSON.parse(req.body);
 
         try {
-            const result = await fetcher({
+            const response = await fetcher<IFetchResponseLoginSuccess, IFetchResponseLoginError>({
                 method: 'POST',
-                url: '/auth/signin',
+                url: '/auth/login',
                 data: {
                     email: body.email,
                     password: body.password,
                 }
             });
 
-            if (Object.prototype.hasOwnProperty.call(result, 'errors')) {
-                return res.json({ data: 'Ocorreu algum erro', error: true });
+            console.log(response)
+            if (!response.error) {
+                const responseSuccess = response.data as IFetchResponseLoginSuccess;
+                storeToken(res, responseSuccess.access_token);
+                return res.json({ data: 'Ok', error: false });
             }
 
-            storeToken(res, 'token')
-            return res.json({ data: 'Ok', error: false });
+            const responseFail = response.data as IFetchResponseLoginError;
+            return res.json({ data: responseFail.message, error: true });
         } catch (e) {
-            return res.json({ data: 'Ocorreu algum erro desconhecido', error: true });
+            return res.json({ data: 'Ocorreu algum erro', error: true });
         }
     }
 }

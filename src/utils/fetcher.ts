@@ -7,7 +7,12 @@ interface IFetcherArgs {
     auth?: string;
 }
 
-const fetcher = async<T>(args: IFetcherArgs): Promise<T> => {
+interface FetcherResponse<T, V> {
+    data: T | V;
+    error: boolean;
+}
+
+const fetcher = async<T, V>(args: IFetcherArgs): Promise<FetcherResponse<T, V>> => {
     const { method, url, data, auth } = args;
     const headers: HeadersInit = {
         'Content-Type': 'application/json'
@@ -20,8 +25,15 @@ const fetcher = async<T>(args: IFetcherArgs): Promise<T> => {
         headers,
         body: data ? JSON.stringify(data) : undefined
     });
+    let error = false;
+    if (!response.ok) {
+        error = true;
+    }
     const json = await response.json();
-    return json;
+    return {
+        data: json,
+        error
+    };
 }
 
 export default fetcher;

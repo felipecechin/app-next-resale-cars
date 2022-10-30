@@ -1,6 +1,52 @@
 import { FaSignInAlt } from 'react-icons/fa';
+import { reactSwal } from '@/utils/reactSwal';
+import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
+import { useRouter } from 'next/router';
+
+interface SigninResponse {
+    data: string;
+    error: boolean;
+}
+
 
 export default function Auth(): JSX.Element {
+    const router = useRouter();
+
+    const onSubmit = async (): Promise<void> => {
+        reactSwal.fire({
+            title: 'Por favor, aguarde...',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+        });
+        reactSwal.showLoading();
+        try {
+            const response = await fetch('/api/signin', { method: 'POST', body: JSON.stringify({ email: 'ficechin@hotmail.com', password: 'faehuf@10' }) })
+
+
+            const json: SigninResponse = await response.json();
+
+            if (!json.error) {
+                reactSwal.close()
+                router.push('/')
+                return
+            }
+
+            reactSwal.fire({
+                title: 'Oops!',
+                icon: 'error',
+                text: 'E-mail e/ou senha inválidos',
+                confirmButtonColor: sweetAlertOptions.confirmButtonColor,
+            })
+        } catch (e) {
+            reactSwal.fire({
+                title: 'Oops!',
+                icon: 'error',
+                text: 'Ocorreu algum erro',
+                confirmButtonColor: sweetAlertOptions.confirmButtonColor,
+            })
+        }
+    }
+
     return (
         <div className='flex min-h-screen h-fit pb-4 bg-cyan-700 items-center'>
             <div className="container px-4 mx-auto">
@@ -9,6 +55,9 @@ export default function Auth(): JSX.Element {
                         <div className="text-center mb-8">
                             <h2 className="text-3xl md:text-4xl font-extrabold mb-2">Faça login</h2>
                         </div>
+                        <button onClick={onSubmit}>
+                            clicar
+                        </button>
                         <form action="">
                             <div className="mb-6">
                                 <label className="block mb-2 font-extrabold">E-mail</label>

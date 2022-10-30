@@ -2,22 +2,19 @@ import { FaPlus, FaSearch } from 'react-icons/fa';
 import { useCallback, useMemo, useState } from 'react';
 
 import DrawerCarForm from './DrawerCarForm';
-import Swal from 'sweetalert2'
 import Table from '@/components/shared/Table';
 import TableManagementButtons from '@/components/shared/TableManagementButtons';
+import { reactSwal } from '@/utils/reactSwal';
 import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
-import withReactContent from 'sweetalert2-react-content'
-
-const mySwal = withReactContent(Swal)
 
 const carsTableHeader = [
     {
         key: 'name',
-        label: 'Nome'
+        label: 'Modelo'
     },
     {
         key: 'age',
-        label: 'Idade'
+        label: 'Marca'
     },
     {
         key: 'buttons',
@@ -29,7 +26,7 @@ function ContentCarsPage(): JSX.Element {
     const [carFormDrawer, setCarFormDrawer] = useState(false);
 
     const handleDeleteCar = useCallback(() => {
-        mySwal.fire({
+        reactSwal.fire({
             title: 'Tem certeza que deseja remover o carro?',
             cancelButtonColor: sweetAlertOptions.cancelButtonColor,
             cancelButtonText: 'Cancelar',
@@ -40,12 +37,12 @@ function ContentCarsPage(): JSX.Element {
             text: 'Esta ação é irreversível',
         }).then(async (result) => {
             if (result.isConfirmed) {
-                mySwal.fire({
+                reactSwal.fire({
                     title: 'Por favor, aguarde...',
                     allowEscapeKey: false,
                     allowOutsideClick: false,
                 });
-                mySwal.showLoading();
+                reactSwal.showLoading();
                 try {
                     // const source = 'removeAdvertising'
                     // const data = {
@@ -86,7 +83,7 @@ function ContentCarsPage(): JSX.Element {
                     //     })
                     // }
                 } catch (e) {
-                    mySwal.fire({
+                    reactSwal.fire({
                         title: 'Oops!',
                         icon: 'error',
                         text: 'Ocorreu algum erro ao remover carro',
