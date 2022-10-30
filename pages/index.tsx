@@ -22,12 +22,12 @@ export default function Dashboard(): JSX.Element {
             />
             <MainContent>
                 <div className='w-full grid grid-cols-1 sm:grid-cols-2 gap-4'>
-                    <div className="bg-white rounded-lg shadow-lg flex flex-col gap-2 py-4 px-4">
-                        <div className='flex items-center gap-4'>
-                            <span className='p-4 rounded-lg border border-cyan-700 bg-gray-100'>
+                    <div className="bg-white rounded-lg shadow-lg flex flex-col py-4 px-4">
+                        <div className='flex items-center'>
+                            <span className='p-4 rounded-lg border border-cyan-700 bg-gray-100 mr-2'>
                                 <FaCar className='text-cyan-700 w-6 h-6' />
                             </span>
-                            <span className='text-4xl text-gray-600 font-bold'>
+                            <span className='text-4xl text-gray-600 font-bold mr-2'>
                                 25
                             </span>
                             <p className='text-lg text-gray-600 font-semibold'>
@@ -35,12 +35,12 @@ export default function Dashboard(): JSX.Element {
                             </p>
                         </div>
                     </div>
-                    <div className="bg-white rounded-lg shadow-lg flex flex-col gap-2 py-4 px-4">
-                        <div className='flex items-center gap-4'>
-                            <span className='p-4 rounded-lg border border-cyan-700 bg-gray-100'>
+                    <div className="bg-white rounded-lg shadow-lg flex flex-col py-4 px-4">
+                        <div className='flex items-center'>
+                            <span className='p-4 rounded-lg border border-cyan-700 bg-gray-100 mr-2'>
                                 <FaCogs className='text-cyan-700 w-6 h-6' />
                             </span>
-                            <span className='text-4xl text-gray-600 font-bold'>
+                            <span className='text-4xl text-gray-600 font-bold mr-2'>
                                 30
                             </span>
                             <p className='text-lg text-gray-600 font-semibold'>
@@ -48,7 +48,7 @@ export default function Dashboard(): JSX.Element {
                             </p>
                         </div>
                     </div>
-                    <div className="bg-white rounded-lg shadow-lg flex flex-col gap-2 py-4 px-4">
+                    <div className="bg-white rounded-lg shadow-lg flex flex-col py-4 px-4">
                         <h2 className='text-cyan-700 font-bold text-xl my-2'>
                             Número de ações por usuário cadastrado
                         </h2>
@@ -70,7 +70,7 @@ export default function Dashboard(): JSX.Element {
                             id="number-actions"
                         />
                     </div>
-                    <div className="bg-white rounded-lg shadow-lg flex flex-col gap-2 py-4 px-4">
+                    <div className="bg-white rounded-lg shadow-lg flex flex-col py-4 px-4">
                         <h2 className='text-cyan-700 font-bold text-xl my-2'>
                             Número de ocorrências de cada ação
                         </h2>

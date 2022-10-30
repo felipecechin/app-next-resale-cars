@@ -17,8 +17,10 @@ function Header({ pageTitle }: HeaderProps): JSX.Element {
                         className="text-gray-600 font-semibold uppercase hover:bg-cyan-700 hover:text-white"
                         href={menuOption.href}
                     >
-                        {React.createElement(menuOption.icon, { className: 'w-5 h-5' })}
-                        {menuOption.label}
+                        {React.createElement(menuOption.icon, { className: 'w-5 h-5 mr-2 sm:mr-0' })}
+                        <p>
+                            {menuOption.label}
+                        </p>
                     </Link>
                 </li>
             );
