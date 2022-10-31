@@ -1,9 +1,12 @@
 import * as yup from 'yup';
 
+import { SubmitHandler, useForm } from 'react-hook-form';
+
 import { FaSignInAlt } from 'react-icons/fa';
+import MessageError from '@/components/shared/MessageError';
 import { reactSwal } from '@/utils/reactSwal';
 import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
-import { useForm } from 'react-hook-form';
+import { useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -12,27 +15,34 @@ interface SigninResponse {
     error: boolean;
 }
 
+type FormValues = {
+    email: string;
+    password: string;
+}
+
 const loginSchema = yup.object({
-    email: yup.string().email().required().label('E-mail'),
-    password: yup.string().required().label('Senha')
+    email: yup.string().email('Informe um e-mail válido').required('Por favor, preencha o campo'),
+    password: yup.string().required('Por favor, preencha o campo')
 })
 
 function LoginForm(): JSX.Element {
     const router = useRouter();
 
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
         resolver: yupResolver(loginSchema)
     });
 
-    const submitFormLogin = async (): Promise<void> => {
-        reactSwal.fire({
-            title: 'Por favor, aguarde...',
-            allowEscapeKey: false,
-            allowOutsideClick: false,
-        });
-        reactSwal.showLoading();
+    const submitFormLogin = useCallback<SubmitHandler<FormValues>>(async ({ email, password }): Promise<void> => {
+        console.log(email, password);
+        return
+        // reactSwal.fire({
+        //     title: 'Por favor, aguarde...',
+        //     allowEscapeKey: false,
+        //     allowOutsideClick: false,
+        // });
+        // reactSwal.showLoading();
         try {
-            const response = await fetch('/api/signin', { method: 'POST', body: JSON.stringify({ email: 'ficechin@hotmail.com', password: 'faehuf@10' }) })
+            const response = await fetch('/api/signin', { method: 'POST', body: JSON.stringify({ email, password }) })
 
             const json: SigninResponse = await response.json();
 
@@ -56,7 +66,7 @@ function LoginForm(): JSX.Element {
                 confirmButtonColor: sweetAlertOptions.confirmButtonColor,
             })
         }
-    }
+    }, [router]);
 
     return (
         <form onSubmit={handleSubmit(submitFormLogin)}>
@@ -68,6 +78,9 @@ function LoginForm(): JSX.Element {
                     type="email"
                     {...register('email')}
                 />
+                <MessageError
+                    message={errors.email?.message as string}
+                />
             </div>
             <div className="mb-6">
                 <label className="block mb-2 font-extrabold">Senha</label>
@@ -76,12 +89,15 @@ function LoginForm(): JSX.Element {
                     placeholder="**********"
                     type="password"
                     {...register('password')}
+                    autoComplete="password"
+                />
+                <MessageError
+                    message={errors.password?.message as string}
                 />
             </div>
             <button className="flex items-center justify-center w-full py-4 px-6 mb-6 text-center text-lg leading-6 text-white font-extrabold bg-cyan-800 hover:bg-cyan-900 border-3 border-indigo-900 shadow rounded transition duration-200">
                 <FaSignInAlt className='w-6 h-6 mr-2' /> Entrar
             </button>
-            <p className="text-center font-extrabold">Sem conta? <a className="link text-cyan-700 link-hover" href="#">Registre-se</a></p>
         </form>
     )
 }
