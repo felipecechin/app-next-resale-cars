@@ -4,7 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 
 import Drawer from '@/components/shared/Drawer';
 import InputGroup from '@/components/shared/form/InputGroup';
-import MessageError from '@/components/shared/MessageError';
+import SelectGroup from '@/components/shared/form/SelectGroup';
 import { reactSwal } from '@/utils/reactSwal';
 import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
 import { useCallback } from 'react';
@@ -13,7 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 const carSchema = yup.object({
     brand: yup.string().required('Por favor, preencha o campo'),
     model: yup.string().required('Por favor, preencha o campo'),
-    km: yup.number().required('Por favor, preencha o campo'),
+    km: yup.number().typeError('Por favor, informe um número').positive('Por favor, informe um número maior que 0').required('Por favor, preencha o campo'),
     color: yup.string().required('Por favor, preencha o campo'),
     transmission: yup.string().required('Por favor, preencha o campo'),
 })
@@ -46,9 +46,9 @@ function DrawerCarForm({ open, onClose }: DrawerCarFormProps): JSX.Element {
         // });
         // reactSwal.showLoading();
         try {
-            const response = await fetch('/api/signin', { method: 'POST', body: JSON.stringify({ email, password }) })
+            const response = await fetch('/api/signin', { method: 'POST', body: JSON.stringify({ data }) })
 
-            const json: SigninResponse = await response.json();
+            const json = await response.json();
 
             if (!json.error) {
                 reactSwal.close()
@@ -80,40 +80,36 @@ function DrawerCarForm({ open, onClose }: DrawerCarFormProps): JSX.Element {
             <form className='flex h-full flex-col divide-y divide-gray-200 bg-white border-t-2' onSubmit={handleSubmit(submitCarForm)}>
                 <div className="flex-1 flex flex-col overflow-y-auto px-4 space-y-2 py-4">
                     <InputGroup
-                        label='Marca'
-                        {...register('brand')}
                         error={errors.brand?.message as string}
+                        label='Marca'
+                        name="brand"
+                        register={register}
                     />
                     <InputGroup
-                        label='Modelo'
-                        {...register('model')}
                         error={errors.model?.message as string}
+                        label='Modelo'
+                        name="model"
+                        register={register}
                     />
                     <InputGroup
-                        label='Quilometragem'
-                        {...register('km')}
                         error={errors.km?.message as string}
+                        label='Quilometragem'
+                        name="km"
+                        register={register}
                         type='number'
                     />
-                    <div className="form-control">
-                        <label className="label">
-                            <span className="label-text text-md font-semibold">
-                                Cor
-                            </span>
-                        </label>
-                        <input className="input input-bordered w-full" type="text" />
-                    </div>
-                    <div className="form-control">
-                        <label className="label">
-                            <span className="label-text text-md font-semibold">
-                                Câmbio
-                            </span>
-                        </label>
-                        <select className="select select-bordered w-full">
-                            <option>Automático</option>
-                            <option>Manual</option>
-                        </select>
-                    </div>
+                    <InputGroup
+                        error={errors.color?.message as string}
+                        label='Cor'
+                        name="color"
+                        register={register}
+                    />
+                    <SelectGroup
+                        error={errors.transmission?.message as string}
+                        label="Câmbio"
+                        name="transmission"
+                        register={register}
+                    />
                 </div>
                 <div className="flex flex-shrink-0 justify-end px-4 py-4 items-center">
                     <button className='btn bg-cyan-700' type='submit'>

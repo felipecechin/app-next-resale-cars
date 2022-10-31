@@ -17,15 +17,15 @@ const carsTableHeader = [
         label: 'Modelo'
     },
     {
-        key: '',
+        key: '332131',
         label: 'Cor'
     },
     {
-        key: '',
+        key: 'feafafe',
         label: 'Quilometragem'
     },
     {
-        key: '',
+        key: 'fafefe',
         label: 'Câmbio'
     },
     {

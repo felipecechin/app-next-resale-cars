@@ -2,15 +2,14 @@ import { FieldValues, Path, UseFormRegister } from 'react-hook-form';
 
 import MessageError from '@/components/shared/MessageError';
 
-interface InputGroupProps<T extends FieldValues> {
+interface SelectGroupProps<T extends FieldValues> {
     label: string;
     error: string;
-    type?: string;
     register: UseFormRegister<T>;
     name: Path<T>;
 }
 
-function InputGroup<T extends FieldValues>({ label, error, name, type = 'text', register }: InputGroupProps<T>): JSX.Element {
+function SelectGroup<T extends FieldValues>({ label, error, name, register }: SelectGroupProps<T>): JSX.Element {
     return (
         <div className="form-control">
             <label className="label">
@@ -18,7 +17,10 @@ function InputGroup<T extends FieldValues>({ label, error, name, type = 'text', 
                     {label}
                 </span>
             </label>
-            <input className="input input-bordered w-full" type={type} {...register(name)} />
+            <select className="select select-bordered w-full" {...register(name)}>
+                <option>Automático</option>
+                <option>Manual</option>
+            </select>
             {error &&
                 <MessageError
                     message={error}
@@ -28,4 +30,4 @@ function InputGroup<T extends FieldValues>({ label, error, name, type = 'text', 
     )
 }
 
-export default InputGroup;
+export default SelectGroup;
