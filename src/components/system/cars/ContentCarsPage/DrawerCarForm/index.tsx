@@ -75,41 +75,48 @@ function DrawerCarForm({ open, onClose }: DrawerCarFormProps): JSX.Element {
             open={open}
             title='Cadastro de carro'
         >
-            <form className='space-y-3' onSubmit={handleSubmit(submitCarForm)}>
-                <div className="form-control">
-                    <label className="label">
-                        <span className="label-text text-md font-semibold">
-                            Marca
-                        </span>
-                    </label>
-                    <input className="input input-bordered w-full" type="text" />
+            <form className='flex h-full flex-col divide-y divide-gray-200 bg-white border-t-2' onSubmit={handleSubmit(submitCarForm)}>
+                <div className="flex-1 flex flex-col overflow-y-auto px-4 space-y-2">
+                    <div className="form-control">
+                        <label className="label">
+                            <span className="label-text text-md font-semibold">
+                                Marca
+                            </span>
+                        </label>
+                        <input className="input input-bordered w-full" type="text" />
+                    </div>
+                    <div className="form-control">
+                        <label className="label">
+                            <span className="label-text text-md font-semibold">
+                                Modelo
+                            </span>
+                        </label>
+                        <input className="input input-bordered w-full" type="text" />
+                    </div>
+                    <div className="form-control">
+                        <label className="label">
+                            <span className="label-text text-md font-semibold">
+                                Quilometragem
+                            </span>
+                        </label>
+                        <input className="input input-bordered w-full" type="number" />
+                    </div>
+                    <div className="form-control">
+                        <label className="label">
+                            <span className="label-text text-md font-semibold">
+                                Cor
+                            </span>
+                        </label>
+                        <input className="input input-bordered w-full" type="text" />
+                    </div>
                 </div>
-                <div className="form-control">
-                    <label className="label">
-                        <span className="label-text text-md font-semibold">
-                            Modelo
-                        </span>
-                    </label>
-                    <input className="input input-bordered w-full" type="text" />
-                </div>
-                <div className="form-control">
-                    <label className="label">
-                        <span className="label-text text-md font-semibold">
-                            Quilometragem
-                        </span>
-                    </label>
-                    <input className="input input-bordered w-full" type="number" />
-                </div>
-                <div className="form-control">
-                    <label className="label">
-                        <span className="label-text text-md font-semibold">
-                            Cor
-                        </span>
-                    </label>
-                    <input className="input input-bordered w-full" type="text" />
+                <div className="flex flex-shrink-0 justify-end px-4 py-4 items-center">
+                    <button className='btn bg-cyan-700' type='submit'>
+                        Salvar
+                    </button>
                 </div>
             </form>
-        </Drawer>
+        </Drawer >
     )
 }
 

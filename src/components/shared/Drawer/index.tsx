@@ -38,8 +38,8 @@ function Drawer({ open, onClose, title, children }: DrawerProps): JSX.Element {
                                 leaveTo="translate-y-full sm:translate-y-0 sm:translate-x-full"
                             >
                                 <Dialog.Panel className="pointer-events-auto relative w-screen max-w-md">
-                                    <div className="flex h-full flex-col bg-white py-6 shadow-xl">
-                                        <div className="w-full flex justify-between px-4 sm:px-6">
+                                    <div className="flex h-full flex-col bg-white shadow-xl">
+                                        <div className="w-full flex justify-between px-4 py-6 sm:px-6">
                                             <Dialog.Title className="text-lg font-medium text-gray-900">
                                                 {title}
                                             </Dialog.Title>
@@ -52,9 +52,9 @@ function Drawer({ open, onClose, title, children }: DrawerProps): JSX.Element {
                                                 <FaRegWindowClose aria-hidden="true" className="h-8 w-8" />
                                             </button>
                                         </div>
-                                        <div className="relative mt-6 flex-1 px-4 sm:px-6">
-                                            <div className="absolute inset-0 px-4 sm:px-6">
-                                                <div aria-hidden="true" className="h-full border-2 border-dashed border-gray-200">
+                                        <div className="relative mt-4 flex-1 px-4 sm:px-6">
+                                            <div className="absolute inset-0">
+                                                <div aria-hidden="true" className="h-full border-gray-200">
                                                     {children}
                                                 </div>
                                             </div>
