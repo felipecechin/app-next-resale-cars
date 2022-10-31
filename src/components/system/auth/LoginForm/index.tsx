@@ -32,7 +32,7 @@ function LoginForm(): JSX.Element {
         resolver: yupResolver(loginSchema)
     });
 
-    const submitFormLogin = useCallback<SubmitHandler<FormValues>>(async ({ email, password }): Promise<void> => {
+    const submitLoginForm = useCallback<SubmitHandler<FormValues>>(async ({ email, password }): Promise<void> => {
         console.log(email, password);
         return
         // reactSwal.fire({
@@ -69,7 +69,7 @@ function LoginForm(): JSX.Element {
     }, [router]);
 
     return (
-        <form onSubmit={handleSubmit(submitFormLogin)}>
+        <form onSubmit={handleSubmit(submitLoginForm)}>
             <div className="mb-6">
                 <label className="block mb-2 font-extrabold">E-mail</label>
                 <input

@@ -10,11 +10,23 @@ import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
 const carsTableHeader = [
     {
         key: 'name',
-        label: 'Modelo'
+        label: 'Marca'
     },
     {
         key: 'age',
-        label: 'Marca'
+        label: 'Modelo'
+    },
+    {
+        key: '',
+        label: 'Cor'
+    },
+    {
+        key: '',
+        label: 'Quilometragem'
+    },
+    {
+        key: '',
+        label: 'Câmbio'
     },
     {
         key: 'buttons',

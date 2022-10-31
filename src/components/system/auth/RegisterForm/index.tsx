@@ -36,7 +36,7 @@ function RegisterForm(): JSX.Element {
         resolver: yupResolver(registerSchema)
     });
 
-    const submitFormRegister = useCallback<SubmitHandler<FormValues>>(async ({ name, email, password, password_confirmation }): Promise<void> => {
+    const submitRegisterForm = useCallback<SubmitHandler<FormValues>>(async ({ name, email, password, password_confirmation }): Promise<void> => {
         console.log(email, password);
         return
         // reactSwal.fire({
@@ -73,7 +73,7 @@ function RegisterForm(): JSX.Element {
     }, [router]);
 
     return (
-        <form onSubmit={handleSubmit(submitFormRegister)}>
+        <form onSubmit={handleSubmit(submitRegisterForm)}>
             <div className="mb-6">
                 <label className="block mb-2 font-extrabold">Nome</label>
                 <input
