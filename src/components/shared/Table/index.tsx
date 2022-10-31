@@ -41,14 +41,24 @@ function Table({ header, data, idObjectKey, totalRecords }: TableProps): JSX.Ele
                         {_.map(data, (row) => {
                             return (
                                 <tr key={row[idObjectKey] as string}>
-                                    {_.map(header, (headRow) => {
-                                        return (
-                                            <td
-                                                key={row[idObjectKey] + '-' + headRow.key}
-                                            >
-                                                {row[headRow.key]}
-                                            </td>
-                                        )
+                                    {_.map(header, (headRow, cellIndex) => {
+                                        if (cellIndex === 0) {
+                                            return (
+                                                <th
+                                                    key={row[idObjectKey] + '-' + headRow.key}
+                                                >
+                                                    {row[headRow.key]}
+                                                </th>
+                                            )
+                                        } else {
+                                            return (
+                                                <td
+                                                    key={row[idObjectKey] + '-' + headRow.key}
+                                                >
+                                                    {row[headRow.key]}
+                                                </td>
+                                            )
+                                        }
                                     })}
                                 </tr>
                             )
