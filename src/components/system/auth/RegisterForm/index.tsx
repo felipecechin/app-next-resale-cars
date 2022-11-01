@@ -4,6 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { FaSignInAlt } from 'react-icons/fa';
 import MessageError from '@/components/shared/MessageError';
+import _ from 'lodash';
 import { reactSwal } from '@/utils/reactSwal';
 import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
 import { useCallback } from 'react';
@@ -17,38 +18,36 @@ const registerSchema = yup.object({
     password_confirmation: yup.string().required('Por favor, preencha o campo').oneOf([yup.ref('password')], 'As senhas devem ser iguais')
 })
 
-type FormValues = {
+type TFormValues = {
     name: string;
     email: string;
     password: string;
     password_confirmation: string;
 }
 
-interface SigninResponse {
-    data: string;
+interface ISignupResponse {
+    data: string | string[];
     error: boolean;
 }
 
 function RegisterForm(): JSX.Element {
     const router = useRouter();
 
-    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
+    const { register, handleSubmit, formState: { errors } } = useForm<TFormValues>({
         resolver: yupResolver(registerSchema)
     });
 
-    const submitRegisterForm = useCallback<SubmitHandler<FormValues>>(async ({ name, email, password, password_confirmation }): Promise<void> => {
-        console.log(email, password);
-        return
-        // reactSwal.fire({
-        //     title: 'Por favor, aguarde...',
-        //     allowEscapeKey: false,
-        //     allowOutsideClick: false,
-        // });
-        // reactSwal.showLoading();
+    const submitRegisterForm = useCallback<SubmitHandler<TFormValues>>(async (data): Promise<void> => {
+        reactSwal.fire({
+            title: 'Aguarde. Salvando dados e logando...',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+        });
+        reactSwal.showLoading();
         try {
-            const response = await fetch('/api/signin', { method: 'POST', body: JSON.stringify({ email, password }) })
+            const response = await fetch('/api/signup', { method: 'POST', body: JSON.stringify(data) })
 
-            const json: SigninResponse = await response.json();
+            const json: ISignupResponse = await response.json();
 
             if (!json.error) {
                 reactSwal.close()
@@ -56,10 +55,16 @@ function RegisterForm(): JSX.Element {
                 return
             }
 
+            const errors = json.data as string[];
+            const listingErrorsToShow = _.map(errors, (error, index) => <li key={index}>{error}{index < errors.length - 1 ? ';' : '.'}</li>)
             reactSwal.fire({
                 title: 'Oops!',
                 icon: 'error',
-                text: 'E-mail e/ou senha inválidos',
+                html: (
+                    <ul className='text-red-700 italic'>
+                        {listingErrorsToShow}
+                    </ul>
+                ),
                 confirmButtonColor: sweetAlertOptions.confirmButtonColor,
             })
         } catch (e) {

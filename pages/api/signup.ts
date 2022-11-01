@@ -9,19 +9,21 @@ interface IFetchResultLoginUser {
     email: string;
 }
 
-interface IFetchResponseLoginSuccess {
+interface IFetchResponseRegisterSuccess {
     access_token: string;
     token_type: string;
     user: IFetchResultLoginUser;
 }
 
-interface IFetchResponseLoginError {
-    message: string;
+interface IFetchResponseRegisterError {
+    message: string[];
 }
 
 interface IRequestBody {
+    name: string;
     email: string;
     password: string;
+    password_confirmation: string;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
@@ -29,23 +31,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const body: IRequestBody = JSON.parse(req.body);
 
         try {
-            const response = await fetcher<IFetchResponseLoginSuccess, IFetchResponseLoginError>({
+            const response = await fetcher<IFetchResponseRegisterSuccess, IFetchResponseRegisterError>({
                 method: 'POST',
-                url: '/auth/login',
+                url: '/auth/register',
                 data: {
+                    name: body.name,
                     email: body.email,
                     password: body.password,
+                    password_confirmation: body.password_confirmation,
                 }
             });
 
             console.log(response)
             if (!response.error) {
-                const responseSuccess = response.data as IFetchResponseLoginSuccess;
+                const responseSuccess = response.data as IFetchResponseRegisterSuccess;
                 storeToken(res, responseSuccess.access_token);
                 return res.json({ data: 'Ok', error: false });
             }
 
-            const responseFail = response.data as IFetchResponseLoginError;
+            const responseFail = response.data as IFetchResponseRegisterError;
             return res.json({ data: responseFail.message, error: true });
         } catch (e) {
             return res.json({ data: 'Ocorreu algum erro', error: true });
