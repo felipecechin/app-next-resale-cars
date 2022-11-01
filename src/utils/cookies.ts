@@ -1,14 +1,21 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import { parse, serialize } from 'cookie';
+
+import { IncomingMessage } from 'http';
+import { NextApiRequestCookies } from 'next/dist/server/api-utils';
+import { NextApiResponse } from 'next';
 
 const cookieName = '_resalecars';
 
-export const getToken = (req: NextApiRequest): string | undefined => {
+export const getToken = (req: IncomingMessage & {
+    cookies: NextApiRequestCookies
+}): string | undefined => {
     const cookies = parseCookies(req)
     return cookies[cookieName]
 }
 
-export const parseCookies = (req: NextApiRequest): Partial<{
+export const parseCookies = (req: IncomingMessage & {
+    cookies: NextApiRequestCookies
+}): Partial<{
     [key: string]: string;
 }> => {
     // For API Routes we don't need to parse the cookies.

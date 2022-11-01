@@ -1,8 +1,29 @@
 import { FaCar, FaCogs } from 'react-icons/fa';
 
+import { GetServerSideProps } from 'next';
 import Header from '@/components/shared/template/Header';
 import MainContent from '@/components/shared/template/MainContent';
+import _ from 'lodash';
 import dynamic from 'next/dynamic';
+import fetcher from '@/utils/fetcher';
+import { getToken } from '@/utils/cookies';
+import { useMemo } from 'react';
+
+type TUserAction = {
+    count: number;
+    name: string;
+}
+
+type TTypeActions = {
+    count: number;
+    type: 'C' | 'D' | 'U';
+}
+
+interface IFetchResponseDashboardSuccess {
+    userActions: TUserAction[];
+    typeActions: TTypeActions[];
+    totalCars: number;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const ApexColumnChart = dynamic(() => import('@/components/shared/charts/apexcharts/ApexColumnChart'), {
@@ -14,7 +35,26 @@ const ApexPieChart = dynamic(() => import('@/components/shared/charts/apexcharts
     ssr: false,
 })
 
-export default function Dashboard(): JSX.Element {
+interface IDashboardProps {
+    userActions: TUserAction[];
+    typeActions: TTypeActions[];
+    totalCars: number;
+}
+
+export default function Dashboard({ userActions, typeActions, totalCars }: IDashboardProps): JSX.Element {
+    const totalActions = useMemo(() => {
+        return _.reduce(typeActions, (sum, n) => sum + n.count, 0);
+    }, [typeActions])
+
+    const typeActionsToShowOnGraph = useMemo(() => {
+        return _.map(typeActions, (typeAction) => {
+            return {
+                ...typeAction,
+                type: typeAction.type === 'C' ? 'Cadastro' : typeAction.type === 'U' ? 'Atualização' : 'Deleção',
+            }
+        })
+    }, [typeActions])
+
     return (
         <>
             <Header
@@ -28,7 +68,7 @@ export default function Dashboard(): JSX.Element {
                                 <FaCar className='text-cyan-700 w-6 h-6' />
                             </span>
                             <span className='text-4xl text-gray-600 font-bold mr-2'>
-                                25
+                                {totalCars}
                             </span>
                             <p className='text-lg text-gray-600 font-semibold'>
                                 carros cadastrados
@@ -41,7 +81,7 @@ export default function Dashboard(): JSX.Element {
                                 <FaCogs className='text-cyan-700 w-6 h-6' />
                             </span>
                             <span className='text-4xl text-gray-600 font-bold mr-2'>
-                                30
+                                {totalActions}
                             </span>
                             <p className='text-lg text-gray-600 font-semibold'>
                                 ações realizadas
@@ -53,18 +93,9 @@ export default function Dashboard(): JSX.Element {
                             Número de ações por usuário cadastrado
                         </h2>
                         <ApexColumnChart
-                            categoriesKey='test'
-                            data={[
-                                {
-                                    test: 'Felipe',
-                                    value: 321
-                                },
-                                {
-                                    test: 'Alfredo',
-                                    value: 124
-                                }
-                            ]}
-                            dataKey='value'
+                            categoriesKey='name'
+                            data={userActions}
+                            dataKey='count'
                             dataName='Número de ações do usuário'
                             height={['300px']}
                             id="number-actions"
@@ -78,17 +109,8 @@ export default function Dashboard(): JSX.Element {
                             className='flex-grow flex items-center justify-center'
                         >
                             <ApexPieChart
-                                data={[
-                                    {
-                                        test: 'Cadastro',
-                                        value: 321
-                                    },
-                                    {
-                                        test: 'Atualização',
-                                        value: 124
-                                    }
-                                ]}
-                                labelsKey='test'
+                                data={typeActionsToShowOnGraph}
+                                labelsKey='type'
                                 responsiveHeight={[
                                     '300px',
                                     '250px',
@@ -107,7 +129,7 @@ export default function Dashboard(): JSX.Element {
                                     '100%',
                                     '400px',
                                 ]}
-                                seriesKey='value'
+                                seriesKey='count'
                                 width="400px"
                             />
                         </span>
@@ -118,3 +140,40 @@ export default function Dashboard(): JSX.Element {
         </>
     )
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ resolvedUrl, req }) => {
+    const token = getToken(req)
+    if (!token) {
+        return {
+            redirect: {
+                destination: '/auth?redirect=' + encodeURIComponent(resolvedUrl),
+                permanent: false
+            }
+        };
+    }
+
+    const response = await fetcher<IFetchResponseDashboardSuccess, void>({
+        method: 'GET',
+        url: '/dashboard',
+        auth: token
+    });
+
+    let userActions: TUserAction[] = [];
+    let typeActions: TTypeActions[] = [];
+    let totalCars = 0;
+
+    if (!response.error) {
+        const responseSuccess = response.data as IFetchResponseDashboardSuccess;
+        userActions = responseSuccess.userActions;
+        typeActions = responseSuccess.typeActions;
+        totalCars = responseSuccess.totalCars;
+    }
+
+    return {
+        props: {
+            userActions,
+            typeActions,
+            totalCars
+        }
+    }
+};

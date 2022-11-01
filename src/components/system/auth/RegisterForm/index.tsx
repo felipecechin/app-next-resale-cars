@@ -51,7 +51,12 @@ function RegisterForm(): JSX.Element {
 
             if (!json.error) {
                 reactSwal.close()
-                router.push('/')
+                const { redirect } = router.query;
+                if (redirect) {
+                    router.push(redirect as string)
+                } else {
+                    router.push('/')
+                }
                 return
             }
 
