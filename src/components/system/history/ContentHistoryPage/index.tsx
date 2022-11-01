@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { TAction } from '@/types/common';
+import { TAction } from '@/types/actions';
 import Table from '@/components/shared/Table';
 import _ from 'lodash';
 import fetcher from '@/utils/fetcher';
@@ -57,7 +57,7 @@ function ContentHistoryPage({ actions, total, token }: IContentHistoryPageProps)
     const filterUser = useRef<HTMLSelectElement>(null);
     const filterAction = useRef<HTMLSelectElement>(null);
 
-    const handleSearch = useCallback(async (page = 1) => {
+    const handleSearchHistory = useCallback(async (page = 1) => {
         let queryParams = '?page=' + page
         if (filterUser.current?.value && filterUser.current.value !== '') {
             queryParams = queryParams + '&user=' + filterUser.current.value
@@ -143,7 +143,7 @@ function ContentHistoryPage({ actions, total, token }: IContentHistoryPageProps)
                 <select
                     className="select select-bordered w-full sm:w-auto md:max-w-xs"
                     defaultValue=''
-                    onChange={() => handleSearch()}
+                    onChange={() => handleSearchHistory()}
                     ref={filterUser}
                 >
                     <option value=''>Sem filtro de usuário</option>
@@ -152,7 +152,7 @@ function ContentHistoryPage({ actions, total, token }: IContentHistoryPageProps)
                 <select
                     className="select select-bordered w-full sm:w-auto md:max-w-xs mt-2 sm:mt-0"
                     defaultValue=''
-                    onChange={() => handleSearch()}
+                    onChange={() => handleSearchHistory()}
                     ref={filterAction}
                 >
                     <option value=''>Sem filtro de ação</option>
@@ -166,7 +166,7 @@ function ContentHistoryPage({ actions, total, token }: IContentHistoryPageProps)
                 data={historyTableData}
                 header={historyTableHeader}
                 idObjectKey='id'
-                onChangePage={handleSearch}
+                onChangePage={handleSearchHistory}
                 totalRecords={stateActions.total}
             />
         </div>

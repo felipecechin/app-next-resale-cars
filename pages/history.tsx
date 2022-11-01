@@ -2,7 +2,7 @@ import ContentHistoryPage from '@/components/system/history/ContentHistoryPage';
 import { GetServerSideProps } from 'next';
 import Header from '@/components/shared/template/Header';
 import MainContent from '@/components/shared/template/MainContent';
-import { TAction } from '@/types/common';
+import { TAction } from '@/types/actions';
 import fetcher from '@/utils/fetcher';
 import { getToken } from '@/utils/cookies';
 

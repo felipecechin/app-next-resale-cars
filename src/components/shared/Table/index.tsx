@@ -20,7 +20,7 @@ interface ITableProps {
     actualPage: number;
 }
 
-function Table({ header, data, idObjectKey, totalRecords, onChangePage, actualPage }: ITableProps): JSX.Element {
+function Table({ header, data, idObjectKey, totalRecords, onChangePage, actualPage = 0 }: ITableProps): JSX.Element {
     return (
         <>
             <div className="overflow-x-auto">
