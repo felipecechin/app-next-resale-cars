@@ -7,12 +7,12 @@ interface IFetcherArgs {
     auth?: string;
 }
 
-interface FetcherResponse<T, V> {
+interface IFetcherResponse<T, V> {
     data: T | V;
     error: boolean;
 }
 
-const fetcher = async<T, V>(args: IFetcherArgs): Promise<FetcherResponse<T, V>> => {
+const fetcher = async<T, V>(args: IFetcherArgs): Promise<IFetcherResponse<T, V>> => {
     const { method, url, data, auth } = args;
     const headers: HeadersInit = {
         'Content-Type': 'application/json'
