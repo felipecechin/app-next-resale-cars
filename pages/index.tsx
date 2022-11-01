@@ -46,7 +46,7 @@ export default function Dashboard({ userActions, typeActions, totalCars }: IDash
         return _.reduce(typeActions, (sum, n) => sum + n.count, 0);
     }, [typeActions])
 
-    const typeActionsToShowOnGraph = useMemo(() => {
+    const typeActionsToShowOnGraphic = useMemo(() => {
         return _.map(typeActions, (typeAction) => {
             return {
                 ...typeAction,
@@ -109,7 +109,7 @@ export default function Dashboard({ userActions, typeActions, totalCars }: IDash
                             className='flex-grow flex items-center justify-center'
                         >
                             <ApexPieChart
-                                data={typeActionsToShowOnGraph}
+                                data={typeActionsToShowOnGraphic}
                                 labelsKey='type'
                                 responsiveHeight={[
                                     '300px',

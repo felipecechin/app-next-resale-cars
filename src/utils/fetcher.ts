@@ -18,7 +18,7 @@ const fetcher = async<T, V>(args: IFetcherArgs): Promise<IFetcherResponse<T, V>>
         'Content-Type': 'application/json'
     }
     if (auth) {
-        headers['Authorization'] = auth;
+        headers['Authorization'] = 'Bearer ' + auth;
     }
     const response = await fetch(`${env.API}${url}`, {
         method,

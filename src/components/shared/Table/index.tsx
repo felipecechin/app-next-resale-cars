@@ -16,9 +16,11 @@ interface ITableProps {
     data: { [key: string]: string | number | JSX.Element }[];
     idObjectKey: string;
     totalRecords: number;
+    onChangePage: (page: number) => void;
+    actualPage: number;
 }
 
-function Table({ header, data, idObjectKey, totalRecords }: ITableProps): JSX.Element {
+function Table({ header, data, idObjectKey, totalRecords, onChangePage, actualPage }: ITableProps): JSX.Element {
     return (
         <>
             <div className="overflow-x-auto">
@@ -40,7 +42,7 @@ function Table({ header, data, idObjectKey, totalRecords }: ITableProps): JSX.El
                     <tbody>
                         {_.map(data, (row) => {
                             return (
-                                <tr key={row[idObjectKey] as string}>
+                                <tr key={String(row[idObjectKey])}>
                                     {_.map(header, (headRow, cellIndex) => {
                                         if (cellIndex === 0) {
                                             return (
@@ -69,9 +71,9 @@ function Table({ header, data, idObjectKey, totalRecords }: ITableProps): JSX.El
             <div className='flex items-center justify-end sm:justify-between my-2'>
                 <p className='font-normal text-sm hidden sm:block'>Mostrando {data.length} de {totalRecords} registro(s).</p>
                 <CustomReactPaginate
-                    actualPage={0}
-                    onPageClick={() => console.log('click')}
-                    pagesNumber={Math.ceil(totalRecords / 10)}
+                    actualPage={actualPage - 1}
+                    onPageClick={({ selected }) => onChangePage(selected + 1)}
+                    pagesNumber={Math.ceil(totalRecords / 5)}
                 />
             </div>
         </>
