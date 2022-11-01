@@ -1,5 +1,7 @@
 {
-    "plugins": ["@typescript-eslint"],
+    "plugins": [
+        "@typescript-eslint"
+    ],
     "extends": [
         "next/core-web-vitals",
         "plugin:@typescript-eslint/recommended"
@@ -8,27 +10,49 @@
         "@typescript-eslint/no-unused-vars": "error",
         "@typescript-eslint/no-explicit-any": "error",
         "@next/next/no-img-element": "off",
-		"react/prop-types": 0,
-		"sort-imports": 2,
-		"react/jsx-sort-props": 2,
-		"react/react-in-jsx-scope": "off",
-		"no-mixed-spaces-and-tabs": "off",
-		"quotes": [
-			"error",
-			"single"
-		],
-		"@typescript-eslint/explicit-function-return-type": [
-			"error",
-			{
-				"allowExpressions": true
-			}
+        "react/prop-types": 0,
+        "sort-imports": 2,
+        "react/jsx-sort-props": 2,
+        "react/react-in-jsx-scope": "off",
+        "no-mixed-spaces-and-tabs": "off",
+        "quotes": [
+            "error",
+            "single"
         ],
-		"@typescript-eslint/naming-convention": [
-			"warn",
-			{
-				"selector": "variable",
-				"format": ["camelCase"]
-			}
-		]
+        "@typescript-eslint/explicit-function-return-type": [
+            "error",
+            {
+                "allowExpressions": true
+            }
+        ],
+        "@typescript-eslint/naming-convention": [
+            "warn",
+            {
+                "selector": "variable",
+                "format": [
+                    "camelCase"
+                ]
+            },
+            {
+                "selector": "interface",
+                "format": [
+                    "PascalCase"
+                ],
+                "custom": {
+                    "regex": "^I[A-Z]",
+                    "match": true
+                }
+            },
+            {
+                "selector": "typeAlias",
+                "format": [
+                    "PascalCase"
+                ],
+                "custom": {
+                    "regex": "^T[A-Z]",
+                    "match": true
+                }
+            }
+        ]
     }
 }
