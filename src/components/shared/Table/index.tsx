@@ -6,19 +6,19 @@ const CustomReactPaginate = dynamic(() => import('@/components/shared/CustomReac
     ssr: false,
 })
 
-type HeaderObject = {
+type THeaderObject = {
     key: string;
     label: string;
 }
 
-interface TableProps {
-    header: HeaderObject[];
+interface ITableProps {
+    header: THeaderObject[];
     data: { [key: string]: string | number | JSX.Element }[];
     idObjectKey: string;
     totalRecords: number;
 }
 
-function Table({ header, data, idObjectKey, totalRecords }: TableProps): JSX.Element {
+function Table({ header, data, idObjectKey, totalRecords }: ITableProps): JSX.Element {
     return (
         <>
             <div className="overflow-x-auto">

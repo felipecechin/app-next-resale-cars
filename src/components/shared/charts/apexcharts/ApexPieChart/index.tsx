@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import _ from 'lodash'
 
-interface ApexPieChartProps {
+interface IApexPieChartProps {
     responsiveWidth: string[];
     responsiveHeight: string[];
     responsiveLegendPosition: string[];
@@ -14,7 +14,7 @@ interface ApexPieChartProps {
     height?: string;
 }
 
-function ApexPieChart({ responsiveWidth, responsiveHeight, responsiveLegendPosition, seriesKey, labelsKey, data, height, width }: ApexPieChartProps): JSX.Element {
+function ApexPieChart({ responsiveWidth, responsiveHeight, responsiveLegendPosition, seriesKey, labelsKey, data, height, width }: IApexPieChartProps): JSX.Element {
     const [series, setSeries] = useState<ApexAxisChartSeries>([]);
     const [options, setOptions] = useState({});
 

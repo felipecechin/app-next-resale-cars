@@ -3,13 +3,13 @@ import { FaStepBackward, FaStepForward } from 'react-icons/fa';
 import ReactPaginate from 'react-paginate';
 import styles from './styles.module.scss';
 
-interface CustomReactPaginateProps {
+interface ICustomReactPaginateProps {
     actualPage: number;
     pagesNumber: number;
     onPageClick: (selectedItem: { selected: number }) => void;
 }
 
-function CustomReactPaginate({ actualPage, onPageClick, pagesNumber }: CustomReactPaginateProps): JSX.Element {
+function CustomReactPaginate({ actualPage, onPageClick, pagesNumber }: ICustomReactPaginateProps): JSX.Element {
     return (
         <ReactPaginate
             activeLinkClassName={styles.activeLink}

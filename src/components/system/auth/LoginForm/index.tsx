@@ -10,12 +10,12 @@ import { useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-interface SigninResponse {
+interface ISigninResponse {
     data: string;
     error: boolean;
 }
 
-type FormValues = {
+type TFormValues = {
     email: string;
     password: string;
 }
@@ -28,23 +28,23 @@ const loginSchema = yup.object({
 function LoginForm(): JSX.Element {
     const router = useRouter();
 
-    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
+    const { register, handleSubmit, formState: { errors } } = useForm<TFormValues>({
         resolver: yupResolver(loginSchema)
     });
 
-    const submitLoginForm = useCallback<SubmitHandler<FormValues>>(async ({ email, password }): Promise<void> => {
+    const submitLoginForm = useCallback<SubmitHandler<TFormValues>>(async ({ email, password }): Promise<void> => {
         console.log(email, password);
         return
-        // reactSwal.fire({
-        //     title: 'Por favor, aguarde...',
-        //     allowEscapeKey: false,
-        //     allowOutsideClick: false,
-        // });
-        // reactSwal.showLoading();
+        reactSwal.fire({
+            title: 'Por favor, aguarde...',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+        });
+        reactSwal.showLoading();
         try {
             const response = await fetch('/api/signin', { method: 'POST', body: JSON.stringify({ email, password }) })
 
-            const json: SigninResponse = await response.json();
+            const json: ISigninResponse = await response.json();
 
             if (!json.error) {
                 reactSwal.close()

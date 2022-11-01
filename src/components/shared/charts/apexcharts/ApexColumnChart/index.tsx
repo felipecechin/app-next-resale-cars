@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import _ from 'lodash';
 
-interface ApexColumnChartProps {
+interface IApexColumnChartProps {
     data: object[];
     categoriesKey: string;
     dataKey: string;
@@ -14,7 +14,7 @@ interface ApexColumnChartProps {
 }
 
 
-function ApexColumnChart({ data, categoriesKey, dataKey, id, height, dataName, xAxisLabelsOptions = {} }: ApexColumnChartProps): JSX.Element {
+function ApexColumnChart({ data, categoriesKey, dataKey, id, height, dataName, xAxisLabelsOptions = {} }: IApexColumnChartProps): JSX.Element {
     const [series, setSeries] = useState<ApexAxisChartSeries>([]);
     const [options, setOptions] = useState({});
 

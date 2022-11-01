@@ -18,7 +18,7 @@ const carSchema = yup.object({
     transmission: yup.string().required('Por favor, preencha o campo'),
 })
 
-type FormValues = {
+type TFormValues = {
     brand: string;
     model: string;
     km: number;
@@ -26,17 +26,17 @@ type FormValues = {
     transmission: string;
 }
 
-interface DrawerCarFormProps {
+interface IDrawerCarFormProps {
     open: boolean;
     onClose: () => void;
 }
 
-function DrawerCarForm({ open, onClose }: DrawerCarFormProps): JSX.Element {
-    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
+function DrawerCarForm({ open, onClose }: IDrawerCarFormProps): JSX.Element {
+    const { register, handleSubmit, formState: { errors } } = useForm<TFormValues>({
         resolver: yupResolver(carSchema)
     });
 
-    const submitCarForm = useCallback<SubmitHandler<FormValues>>(async (data): Promise<void> => {
+    const submitCarForm = useCallback<SubmitHandler<TFormValues>>(async (data): Promise<void> => {
         console.log(data);
         return
         // reactSwal.fire({

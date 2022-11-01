@@ -3,14 +3,14 @@ import { Dialog, Transition } from '@headlessui/react'
 import { FaRegWindowClose } from 'react-icons/fa';
 import { Fragment } from 'react';
 
-interface DrawerProps {
+interface IDrawerProps {
     open: boolean;
     onClose: () => void;
     title: string;
     children: React.ReactNode;
 }
 
-function Drawer({ open, onClose, title, children }: DrawerProps): JSX.Element {
+function Drawer({ open, onClose, title, children }: IDrawerProps): JSX.Element {
     return (
         <Transition.Root as={Fragment} show={open}>
             <Dialog as="div" className="relative z-10" onClose={onClose}>

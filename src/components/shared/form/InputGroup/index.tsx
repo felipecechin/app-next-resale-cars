@@ -2,7 +2,7 @@ import { FieldValues, Path, UseFormRegister } from 'react-hook-form';
 
 import MessageError from '@/components/shared/MessageError';
 
-interface InputGroupProps<T extends FieldValues> {
+interface IInputGroupProps<T extends FieldValues> {
     label: string;
     error: string;
     type?: string;
@@ -10,7 +10,7 @@ interface InputGroupProps<T extends FieldValues> {
     name: Path<T>;
 }
 
-function InputGroup<T extends FieldValues>({ label, error, name, type = 'text', register }: InputGroupProps<T>): JSX.Element {
+function InputGroup<T extends FieldValues>({ label, error, name, type = 'text', register }: IInputGroupProps<T>): JSX.Element {
     return (
         <div className="form-control">
             <label className="label">

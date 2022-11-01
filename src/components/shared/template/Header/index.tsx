@@ -4,11 +4,11 @@ import Link from 'next/link';
 import _ from 'lodash'
 import { menuOptions } from '@/utils/menuOptions';
 
-interface HeaderProps {
+interface IHeaderProps {
     pageTitle: string;
 }
 
-function Header({ pageTitle }: HeaderProps): JSX.Element {
+function Header({ pageTitle }: IHeaderProps): JSX.Element {
     const headerMenuOptions = useMemo(() => {
         return _.map(menuOptions, (menuOption) => {
             return (

@@ -3,12 +3,12 @@ import { FaPencilAlt, FaTrash } from 'react-icons/fa';
 import classNames from '@/utils/classNames';
 import styles from './styles.module.scss';
 
-interface TableManagementButtonsProps {
+interface ITableManagementButtonsProps {
     onUpdate?: () => void;
     onDelete?: () => void;
 }
 
-function TableManagementButtons({ onUpdate = undefined, onDelete = undefined }: TableManagementButtonsProps): JSX.Element {
+function TableManagementButtons({ onUpdate = undefined, onDelete = undefined }: ITableManagementButtonsProps): JSX.Element {
     return (
         <span className={styles.managementButtonsSpan}>
             {onUpdate &&
