@@ -26,7 +26,12 @@ interface IRequestBody {
     password_confirmation: string;
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+type TResponseJson = {
+    data: string | string[];
+    error: boolean;
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse<TResponseJson>): Promise<void> {
     if (req.method === 'POST') {
         const body: IRequestBody = JSON.parse(req.body);
 
