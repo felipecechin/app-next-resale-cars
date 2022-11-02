@@ -23,21 +23,23 @@ export default function Auth(): JSX.Element {
     }, [showForm])
 
     return (
-        <div className='flex min-h-screen h-fit py-4 bg-cyan-700 items-center'>
-            <div className="container px-4 mx-auto">
-                <div className='bg-white rounded-lg shadow sm:max-w-md sm:w-full sm:mx-auto sm-max:m-5 py-10 px-4 sm:px-10'>
-                    <div className="max-w-lg mx-auto">
-                        <div className="text-center mb-8">
-                            <h2 className="text-3xl md:text-4xl font-extrabold mb-2">
-                                {showForm === 'login' ? 'Faça login' : 'Faça seu cadastro'}
-                            </h2>
+        <main>
+            <div className='flex min-h-screen h-fit py-4 bg-cyan-700 items-center'>
+                <div className="container px-4 mx-auto">
+                    <div className='bg-white rounded-lg shadow sm:max-w-md sm:w-full sm:mx-auto sm-max:m-5 py-10 px-4 sm:px-10'>
+                        <div className="max-w-lg mx-auto">
+                            <div className="text-center mb-8">
+                                <h2 className="text-3xl md:text-4xl font-extrabold mb-2">
+                                    {showForm === 'login' ? 'Faça login' : 'Faça seu cadastro'}
+                                </h2>
+                            </div>
+                            {showForm === 'login' && <LoginForm />}
+                            {showForm === 'register' && <RegisterForm />}
+                            {getLinkTextChangeForm}
                         </div>
-                        {showForm === 'login' && <LoginForm />}
-                        {showForm === 'register' && <RegisterForm />}
-                        {getLinkTextChangeForm}
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     )
 }
