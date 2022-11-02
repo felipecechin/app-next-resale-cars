@@ -9,27 +9,18 @@ Para estilização, foram utilizadas as bibliotecas:
 - Tailwind
 - DaisyUI
 
+### Telas
+1. Login/cadastro de usuário (`/auth`)
+2. Dashboard (`/`)
+3. Carros (`/cars`)
+4. Histórico de ações (`/history`)
 
+### Aplicação back-end
+A aplicação back-end utilizada está descrita [aqui](https://github.com/felipecechin/app-resale-cars).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Como executar aplicação?
+Supondo que o back-end está rodando na máquina local na porta `http://localhost:8000/` e supondo também que o Node v16+, NPM e Yarn estão corretamente instalados, faça os seguintes passos:
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. Criar arquivo `.env.local` e definir URL da API: `NEXT_PUBLIC_HOST_API=http://localhost:8000/api`
+2. Executar comando `yarn` para instalar dependências.
+3. Executar comando `yarn dev` para executar aplicação.
