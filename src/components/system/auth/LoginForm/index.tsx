@@ -8,6 +8,7 @@ import { reactSwal } from '@/utils/reactSwal';
 import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
 import { useCallback } from 'react';
 import { useRouter } from 'next/router';
+import { yupMessages } from '@/utils/yupMessages';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 interface ISigninResponse {
@@ -21,8 +22,8 @@ type TFormValues = {
 }
 
 const loginSchema = yup.object({
-    email: yup.string().email('Informe um e-mail válido').required('Por favor, preencha o campo'),
-    password: yup.string().required('Por favor, preencha o campo')
+    email: yup.string().email(yupMessages.email).required(yupMessages.required),
+    password: yup.string().required(yupMessages.required)
 })
 
 function LoginForm(): JSX.Element {

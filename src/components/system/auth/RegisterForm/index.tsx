@@ -9,13 +9,14 @@ import { reactSwal } from '@/utils/reactSwal';
 import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
 import { useCallback } from 'react';
 import { useRouter } from 'next/router';
+import { yupMessages } from '@/utils/yupMessages';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 const registerSchema = yup.object({
-    name: yup.string().required('Por favor, preencha o campo'),
-    email: yup.string().email('Informe um e-mail válido').required('Por favor, preencha o campo'),
-    password: yup.string().required('Por favor, preencha o campo'),
-    password_confirmation: yup.string().required('Por favor, preencha o campo').oneOf([yup.ref('password')], 'As senhas devem ser iguais')
+    name: yup.string().required(yupMessages.required),
+    email: yup.string().email(yupMessages.email).required(yupMessages.required),
+    password: yup.string().required(yupMessages.required),
+    password_confirmation: yup.string().required(yupMessages.required).oneOf([yup.ref('password')], 'As senhas devem ser iguais')
 })
 
 type TFormValues = {
@@ -39,7 +40,7 @@ function RegisterForm(): JSX.Element {
 
     const submitRegisterForm = useCallback<SubmitHandler<TFormValues>>(async (data): Promise<void> => {
         reactSwal.fire({
-            title: 'Aguarde. Salvando dados e logando...',
+            title: 'Salvando dados e logando. Aguarde...',
             allowEscapeKey: false,
             allowOutsideClick: false,
         });

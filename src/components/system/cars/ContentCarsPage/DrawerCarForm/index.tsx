@@ -11,14 +11,15 @@ import _ from 'lodash';
 import fetcher from '@/utils/fetcher';
 import { reactSwal } from '@/utils/reactSwal';
 import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
+import { yupMessages } from '@/utils/yupMessages';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 const carSchema = yup.object({
-    brand: yup.string().required('Por favor, preencha o campo'),
-    model: yup.string().required('Por favor, preencha o campo'),
-    km: yup.number().typeError('Por favor, informe um número').min(0, 'Por favor, informe um número maior ou igual a 0').required('Por favor, preencha o campo'),
-    color: yup.string().required('Por favor, preencha o campo'),
-    transmission: yup.string().required('Por favor, preencha o campo'),
+    brand: yup.string().required(yupMessages.required),
+    model: yup.string().required(yupMessages.required),
+    km: yup.number().typeError(yupMessages.typeNumber).min(0, 'Por favor, informe um número maior ou igual a 0').required(yupMessages.required),
+    color: yup.string().required(yupMessages.required),
+    transmission: yup.string().required(yupMessages.required),
 })
 
 type TFormValues = {
@@ -62,7 +63,6 @@ function DrawerCarForm({ open, onClose, carSelectedToUpdate, onCarSaved, token }
     }, [carSelectedToUpdate])
 
     const submitCarForm = useCallback<SubmitHandler<TFormValues>>(async (data): Promise<void> => {
-        console.log(data)
         reactSwal.fire({
             title: 'Por favor, aguarde...',
             allowEscapeKey: false,

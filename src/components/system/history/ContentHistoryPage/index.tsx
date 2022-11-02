@@ -81,7 +81,6 @@ function ContentHistoryPage({ actions, total, token }: IContentHistoryPageProps)
 
             if (!response.error) {
                 const responseSuccess = response.data as IFetchResponseHistorySuccess;
-                console.log(responseSuccess.actions)
                 setStateActions({
                     actions: responseSuccess.actions,
                     total: responseSuccess.total,

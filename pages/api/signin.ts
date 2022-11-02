@@ -43,7 +43,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 }
             });
 
-            console.log(response)
             if (!response.error) {
                 const responseSuccess = response.data as IFetchResponseLoginSuccess;
                 storeToken(res, responseSuccess.access_token);
