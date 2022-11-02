@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             if (!response.error) {
                 const responseSuccess = response.data as IFetchResponseLoginSuccess;
                 storeToken(res, responseSuccess.access_token);
-                return res.json({ data: 'Ok', error: false });
+                return res.json({ data: responseSuccess.access_token, error: false });
             }
 
             const responseFail = response.data as IFetchResponseLoginError;

@@ -9,6 +9,7 @@ import _ from 'lodash';
 import fetcher from '@/utils/fetcher';
 import { reactSwal } from '@/utils/reactSwal';
 import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
+import { useAuth } from '@/contexts/AuthContext';
 
 const carsTableHeader = [
     {
@@ -40,7 +41,6 @@ const carsTableHeader = [
 interface IContentCarsPageProps {
     cars: TCar[];
     total: number;
-    token: string;
 }
 
 interface IFetchResponseCarsSuccess {
@@ -48,7 +48,8 @@ interface IFetchResponseCarsSuccess {
     total: number;
 }
 
-function ContentCarsPage({ cars, total, token }: IContentCarsPageProps): JSX.Element {
+function ContentCarsPage({ cars, total }: IContentCarsPageProps): JSX.Element {
+    const { token } = useAuth();
     const [carFormDrawer, setCarFormDrawer] = useState<{ open: boolean, carSelected: TCar }>({
         open: false,
         carSelected: {} as TCar
@@ -251,7 +252,6 @@ function ContentCarsPage({ cars, total, token }: IContentCarsPageProps): JSX.Ele
                     open: false
                 })}
                 open={carFormDrawer.open}
-                token={token}
             />
         </div>
     )

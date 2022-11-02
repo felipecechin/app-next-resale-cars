@@ -4,11 +4,8 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { FaSignInAlt } from 'react-icons/fa';
 import MessageError from '@/components/shared/MessageError';
-import _ from 'lodash';
-import { reactSwal } from '@/utils/reactSwal';
-import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
+import { useAuth } from '@/contexts/AuthContext';
 import { useCallback } from 'react';
-import { useRouter } from 'next/router';
 import { yupMessages } from '@/utils/yupMessages';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -26,62 +23,17 @@ type TFormValues = {
     password_confirmation: string;
 }
 
-interface ISignupResponse {
-    data: string | string[];
-    error: boolean;
-}
-
 function RegisterForm(): JSX.Element {
-    const router = useRouter();
+    const { signup } = useAuth();
 
     const { register, handleSubmit, formState: { errors } } = useForm<TFormValues>({
         resolver: yupResolver(registerSchema)
     });
 
     const submitRegisterForm = useCallback<SubmitHandler<TFormValues>>(async (data): Promise<void> => {
-        reactSwal.fire({
-            title: 'Salvando dados e logando. Aguarde...',
-            allowEscapeKey: false,
-            allowOutsideClick: false,
-        });
-        reactSwal.showLoading();
-        try {
-            const response = await fetch('/api/signup', { method: 'POST', body: JSON.stringify(data) })
-
-            const json: ISignupResponse = await response.json();
-
-            if (!json.error) {
-                reactSwal.close()
-                const { redirect } = router.query;
-                if (redirect) {
-                    router.push(redirect as string)
-                } else {
-                    router.push('/')
-                }
-                return
-            }
-
-            const errors = json.data as string[];
-            const listingErrorsToShow = _.map(errors, (error, index) => <li key={index}>{error}{index < errors.length - 1 ? ';' : '.'}</li>)
-            reactSwal.fire({
-                title: 'Oops!',
-                icon: 'error',
-                html: (
-                    <ul className='text-red-700 italic'>
-                        {listingErrorsToShow}
-                    </ul>
-                ),
-                confirmButtonColor: sweetAlertOptions.confirmButtonColor,
-            })
-        } catch (e) {
-            reactSwal.fire({
-                title: 'Oops!',
-                icon: 'error',
-                text: 'Ocorreu algum erro',
-                confirmButtonColor: sweetAlertOptions.confirmButtonColor,
-            })
-        }
-    }, [router]);
+        const { name, email, password, password_confirmation: passwordConfirmation } = data;
+        signup(name, email, password, passwordConfirmation);
+    }, [signup]);
 
     return (
         <form onSubmit={handleSubmit(submitRegisterForm)}>

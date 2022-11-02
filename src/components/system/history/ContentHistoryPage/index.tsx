@@ -7,6 +7,7 @@ import fetcher from '@/utils/fetcher';
 import { getFormattedDateHour } from '@/utils/getFormattedDateHour';
 import { reactSwal } from '@/utils/reactSwal';
 import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
+import { useAuth } from '@/contexts/AuthContext';
 
 const historyTableHeader = [
     {
@@ -44,10 +45,10 @@ interface IFetchResponseHistorySuccess {
 interface IContentHistoryPageProps {
     actions: TAction[];
     total: number;
-    token: string;
 }
 
-function ContentHistoryPage({ actions, total, token }: IContentHistoryPageProps): JSX.Element {
+function ContentHistoryPage({ actions, total }: IContentHistoryPageProps): JSX.Element {
+    const { token } = useAuth();
     const [stateActions, setStateActions] = useState<{ actions: TAction[], total: number, actualPage: number }>({
         actions,
         total,
@@ -114,9 +115,10 @@ function ContentHistoryPage({ actions, total, token }: IContentHistoryPageProps)
                 setUsers(responseSuccess.users);
             }
         }
-        getUsers();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+        if (token) {
+            getUsers();
+        }
+    }, [token])
 
     const selectUsersOptions = useMemo(() => {
         return _.map(users, (user) => {

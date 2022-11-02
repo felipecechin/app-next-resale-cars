@@ -11,6 +11,7 @@ import _ from 'lodash';
 import fetcher from '@/utils/fetcher';
 import { reactSwal } from '@/utils/reactSwal';
 import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
+import { useAuth } from '@/contexts/AuthContext';
 import { yupMessages } from '@/utils/yupMessages';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -39,10 +40,10 @@ interface IDrawerCarFormProps {
     onClose: () => void;
     carSelectedToUpdate: TCar;
     onCarSaved: (action: 'create' | 'update', car?: TCar) => void;
-    token: string;
 }
 
-function DrawerCarForm({ open, onClose, carSelectedToUpdate, onCarSaved, token }: IDrawerCarFormProps): JSX.Element {
+function DrawerCarForm({ open, onClose, carSelectedToUpdate, onCarSaved }: IDrawerCarFormProps): JSX.Element {
+    const { token } = useAuth();
     const { register, handleSubmit, formState: { errors }, reset } = useForm<TFormValues>({
         resolver: yupResolver(carSchema)
     });

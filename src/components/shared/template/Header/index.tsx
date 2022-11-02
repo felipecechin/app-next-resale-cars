@@ -1,16 +1,17 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import Link from 'next/link';
 import _ from 'lodash'
 import { menuOptions } from '@/utils/menuOptions';
-import { useRouter } from 'next/router';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface IHeaderProps {
     pageTitle: string;
 }
 
 function Header({ pageTitle }: IHeaderProps): JSX.Element {
-    const router = useRouter();
+    const { signout } = useAuth();
+
     const headerMenuOptions = useMemo(() => {
         return _.map(menuOptions, (menuOption) => {
             return (
@@ -28,11 +29,6 @@ function Header({ pageTitle }: IHeaderProps): JSX.Element {
             );
         });
     }, []);
-
-    const handleSignout = useCallback(async () => {
-        await fetch('/api/signout');
-        router.push('/auth');
-    }, [router]);
 
     return (
         <header className="w-full bg-cyan-700 px-4 py-4">
@@ -55,7 +51,7 @@ function Header({ pageTitle }: IHeaderProps): JSX.Element {
                         </ul>
                     </div>
                     <div className="navbar-end ml-2 sm:ml-0 w-auto sm:w-1/2">
-                        <button className="link link-hover mr-2 text-cyan-700 hover:text-cyan-900" onClick={handleSignout}>
+                        <button className="link link-hover mr-2 text-cyan-700 hover:text-cyan-900" onClick={signout}>
                             Sair
                         </button>
                     </div>

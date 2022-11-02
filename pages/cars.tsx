@@ -15,10 +15,9 @@ interface IFetchResponseCarsSuccess {
 interface ICarsProps {
     cars: TCar[];
     total: number;
-    token: string;
 }
 
-export default function Cars({ cars, total, token }: ICarsProps): JSX.Element {
+export default function Cars({ cars, total }: ICarsProps): JSX.Element {
     return (
         <>
             <Header
@@ -27,7 +26,6 @@ export default function Cars({ cars, total, token }: ICarsProps): JSX.Element {
             <MainContent>
                 <ContentCarsPage
                     cars={cars}
-                    token={token}
                     total={total}
                 />
             </MainContent>
@@ -65,8 +63,7 @@ export const getServerSideProps: GetServerSideProps = async ({ resolvedUrl, req 
     return {
         props: {
             cars,
-            total,
-            token
+            total
         }
     }
 };

@@ -4,17 +4,10 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { FaSignInAlt } from 'react-icons/fa';
 import MessageError from '@/components/shared/MessageError';
-import { reactSwal } from '@/utils/reactSwal';
-import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
+import { useAuth } from '@/contexts/AuthContext';
 import { useCallback } from 'react';
-import { useRouter } from 'next/router';
 import { yupMessages } from '@/utils/yupMessages';
 import { yupResolver } from '@hookform/resolvers/yup';
-
-interface ISigninResponse {
-    data: string;
-    error: boolean;
-}
 
 type TFormValues = {
     email: string;
@@ -27,50 +20,15 @@ const loginSchema = yup.object({
 })
 
 function LoginForm(): JSX.Element {
-    const router = useRouter();
+    const { signin } = useAuth();
 
     const { register, handleSubmit, formState: { errors } } = useForm<TFormValues>({
         resolver: yupResolver(loginSchema)
     });
 
     const submitLoginForm = useCallback<SubmitHandler<TFormValues>>(async ({ email, password }): Promise<void> => {
-        reactSwal.fire({
-            title: 'Por favor, aguarde...',
-            allowEscapeKey: false,
-            allowOutsideClick: false,
-        });
-        reactSwal.showLoading();
-        try {
-            const response = await fetch('/api/signin', { method: 'POST', body: JSON.stringify({ email, password }) })
-
-            const json: ISigninResponse = await response.json();
-
-            if (!json.error) {
-                reactSwal.close()
-                const { redirect } = router.query;
-                if (redirect) {
-                    router.push(redirect as string)
-                } else {
-                    router.push('/')
-                }
-                return
-            }
-
-            reactSwal.fire({
-                title: 'Oops!',
-                icon: 'error',
-                text: 'E-mail e/ou senha inválidos',
-                confirmButtonColor: sweetAlertOptions.confirmButtonColor,
-            })
-        } catch (e) {
-            reactSwal.fire({
-                title: 'Oops!',
-                icon: 'error',
-                text: 'Ocorreu algum erro',
-                confirmButtonColor: sweetAlertOptions.confirmButtonColor,
-            })
-        }
-    }, [router]);
+        signin(email, password)
+    }, [signin]);
 
     return (
         <form onSubmit={handleSubmit(submitLoginForm)}>

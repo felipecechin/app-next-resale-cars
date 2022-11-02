@@ -15,10 +15,9 @@ interface IFetchResponseHistorySuccess {
 interface IHistoryProps {
     actions: TAction[];
     total: number;
-    token: string;
 }
 
-export default function History({ actions, total, token }: IHistoryProps): JSX.Element {
+export default function History({ actions, total }: IHistoryProps): JSX.Element {
     return (
         <>
             <Header
@@ -27,7 +26,6 @@ export default function History({ actions, total, token }: IHistoryProps): JSX.E
             <MainContent>
                 <ContentHistoryPage
                     actions={actions}
-                    token={token}
                     total={total}
                 />
             </MainContent>
@@ -65,8 +63,7 @@ export const getServerSideProps: GetServerSideProps = async ({ resolvedUrl, req 
     return {
         props: {
             actions,
-            total,
-            token
+            total
         }
     }
 };
