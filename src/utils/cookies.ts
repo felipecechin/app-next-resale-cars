@@ -43,7 +43,7 @@ export const storeToken = (res: NextApiResponse, token: string, client = false):
         maxAge: 60 * 60 * 4,
         path: '/',
         sameSite: 'lax',
-        // secure: true
+        secure: true
     })
 
     if (client === true) return cookie;
