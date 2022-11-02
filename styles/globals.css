@@ -7,3 +7,22 @@
 .table th:first-child {
     z-index: 0 !important;
 }
+
+html,
+body,
+body > div {
+    height: 100%;
+}
+
+body > div {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+footer {
+    flex-shrink: 0;
+}

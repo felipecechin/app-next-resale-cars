@@ -1,4 +1,5 @@
 import ContentHistoryPage from '@/components/system/history/ContentHistoryPage';
+import Footer from '@/components/shared/template/Footer';
 import { GetServerSideProps } from 'next';
 import Header from '@/components/shared/template/Header';
 import MainContent from '@/components/shared/template/MainContent';
@@ -30,7 +31,7 @@ export default function History({ actions, total, token }: IHistoryProps): JSX.E
                     total={total}
                 />
             </MainContent>
-            {/* <Footer/> */}
+            <Footer />
         </>
     )
 }

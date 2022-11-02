@@ -1,4 +1,5 @@
 import ContentCarsPage from '@/components/system/cars/ContentCarsPage';
+import Footer from '@/components/shared/template/Footer';
 import { GetServerSideProps } from 'next';
 import Header from '@/components/shared/template/Header';
 import MainContent from '@/components/shared/template/MainContent';
@@ -30,7 +31,7 @@ export default function Cars({ cars, total, token }: ICarsProps): JSX.Element {
                     total={total}
                 />
             </MainContent>
-            {/* <Footer/> */}
+            <Footer />
         </>
     )
 }
