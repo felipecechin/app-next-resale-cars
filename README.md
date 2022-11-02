@@ -1,14 +1,15 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Aplicação Front-end para gerenciamento de uma revenda de carros
 
-## Getting Started
+Para a construção da aplicação, foram utilizadas as seguintes tecnologias:
+- Next.js
+- React
+- Typescript
 
-First, run the development server:
+Para estilização, foram utilizadas as bibliotecas:
+- Tailwind
+- DaisyUI
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
