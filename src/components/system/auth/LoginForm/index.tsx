@@ -33,8 +33,6 @@ function LoginForm(): JSX.Element {
     });
 
     const submitLoginForm = useCallback<SubmitHandler<TFormValues>>(async ({ email, password }): Promise<void> => {
-        console.log(email, password);
-        return
         reactSwal.fire({
             title: 'Por favor, aguarde...',
             allowEscapeKey: false,

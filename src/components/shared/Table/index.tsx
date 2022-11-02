@@ -1,3 +1,4 @@
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import _ from 'lodash';
 import dynamic from 'next/dynamic';
 
@@ -18,9 +19,10 @@ interface ITableProps {
     totalRecords: number;
     onChangePage: (page: number) => void;
     actualPage: number;
+    loading?: boolean;
 }
 
-function Table({ header, data, idObjectKey, totalRecords, onChangePage, actualPage = 0 }: ITableProps): JSX.Element {
+function Table({ header, data, idObjectKey, totalRecords, onChangePage, actualPage, loading = false }: ITableProps): JSX.Element {
     return (
         <>
             <div className="overflow-x-auto">
@@ -40,7 +42,7 @@ function Table({ header, data, idObjectKey, totalRecords, onChangePage, actualPa
                         </tr>
                     </thead>
                     <tbody>
-                        {_.map(data, (row) => {
+                        {!loading && _.map(data, (row) => {
                             return (
                                 <tr key={String(row[idObjectKey])}>
                                     {_.map(header, (headRow, cellIndex) => {
@@ -65,16 +67,34 @@ function Table({ header, data, idObjectKey, totalRecords, onChangePage, actualPa
                                 </tr>
                             )
                         })}
+                        {data.length === 0 && !loading && (
+                            <tr>
+                                <td className='bg-gray-100' colSpan={header.length}>
+                                    <p className='italic font-sm'>Nenhum registro encontrado.</p>
+                                </td>
+                            </tr>
+                        )}
+                        {loading && (
+                            <tr>
+                                <td className='bg-gray-100 text-center' colSpan={header.length}>
+                                    <LoadingSpinner />
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>
             <div className='flex items-center justify-end sm:justify-between my-2'>
-                <p className='font-normal text-sm hidden sm:block'>Mostrando {data.length} de {totalRecords} registro(s).</p>
-                <CustomReactPaginate
-                    actualPage={actualPage - 1}
-                    onPageClick={({ selected }) => onChangePage(selected + 1)}
-                    pagesNumber={Math.ceil(totalRecords / 5)}
-                />
+                {data.length > 0 && !loading &&
+                    <p className='font-normal text-sm hidden sm:block'>Mostrando {data.length} de {totalRecords} registro(s).</p>
+                }
+                {!loading && (
+                    <CustomReactPaginate
+                        actualPage={actualPage - 1}
+                        onPageClick={({ selected }) => onChangePage(selected + 1)}
+                        pagesNumber={Math.ceil(totalRecords / 5)}
+                    />
+                )}
             </div>
         </>
     )

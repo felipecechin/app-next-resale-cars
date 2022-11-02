@@ -6,16 +6,17 @@ import { TCar } from '@/types/cars';
 import Table from '@/components/shared/Table';
 import TableManagementButtons from '@/components/shared/TableManagementButtons';
 import _ from 'lodash';
+import fetcher from '@/utils/fetcher';
 import { reactSwal } from '@/utils/reactSwal';
 import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
 
 const carsTableHeader = [
     {
-        key: 'name',
+        key: 'brand',
         label: 'Marca'
     },
     {
-        key: 'age',
+        key: 'model',
         label: 'Modelo'
     },
     {
@@ -42,18 +43,79 @@ interface IContentCarsPageProps {
     token: string;
 }
 
+interface IFetchResponseCarsSuccess {
+    cars: TCar[];
+    total: number;
+}
+
 function ContentCarsPage({ cars, total, token }: IContentCarsPageProps): JSX.Element {
-    const [carFormDrawer, setCarFormDrawer] = useState(false);
+    const [carFormDrawer, setCarFormDrawer] = useState<{ open: boolean, carSelected: TCar }>({
+        open: false,
+        carSelected: {} as TCar
+    });
     const [stateCars, setStateCars] = useState<{ cars: TCar[], total: number, actualPage: number }>({
         cars,
         total,
-        actualPage: 0
+        actualPage: 1
     });
+    const [loadingCars, setLoadingCars] = useState(false)
     const inputSearchRef = useRef<HTMLInputElement>(null)
 
-    const handleSearchCars = useCallback(() => {
+    const handleSearchCars = useCallback(async (page = 1, resetSearch = false, showSweetAlertLoading = true) => {
+        let queryParams = '?page=' + page
+        if (resetSearch) {
+            if (inputSearchRef.current) {
+                inputSearchRef.current.value = ''
+            }
+        }
 
-    }, [])
+        if (inputSearchRef.current?.value && inputSearchRef.current.value !== '') {
+            queryParams = queryParams + '&search=' + inputSearchRef.current.value
+        }
+
+        if (showSweetAlertLoading) {
+            reactSwal.fire({
+                title: 'Por favor, aguarde...',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+            });
+            reactSwal.showLoading();
+        } else {
+            setLoadingCars(true)
+        }
+        try {
+            const response = await fetcher<IFetchResponseCarsSuccess, void>({
+                method: 'GET',
+                url: '/cars' + queryParams,
+                auth: token
+            });
+
+            if (!response.error) {
+                const responseSuccess = response.data as IFetchResponseCarsSuccess;
+                setStateCars({
+                    cars: responseSuccess.cars,
+                    total: responseSuccess.total,
+                    actualPage: page
+                });
+                if (showSweetAlertLoading) {
+                    reactSwal.close();
+                } else {
+                    setLoadingCars(false)
+                }
+                return
+            }
+
+            setLoadingCars(false)
+            throw new Error();
+        } catch (e) {
+            reactSwal.fire({
+                title: 'Oops!',
+                icon: 'error',
+                text: 'Ocorreu algum erro ao buscar os dados',
+                confirmButtonColor: sweetAlertOptions.confirmButtonColor,
+            })
+        }
+    }, [token])
 
     const handleDeleteCar = useCallback((id: number) => {
         reactSwal.fire({
@@ -74,7 +136,24 @@ function ContentCarsPage({ cars, total, token }: IContentCarsPageProps): JSX.Ele
                 });
                 reactSwal.showLoading();
                 try {
+                    const response = await fetcher<void, void>({
+                        method: 'DELETE',
+                        url: '/cars/' + id,
+                        auth: token
+                    });
 
+                    if (!response.error) {
+                        reactSwal.fire({
+                            title: 'Sucesso!',
+                            icon: 'success',
+                            text: 'Carro deletado com sucesso',
+                            confirmButtonColor: sweetAlertOptions.confirmButtonColor,
+                        })
+                        handleSearchCars(1, false, false);
+                        return
+                    }
+
+                    throw new Error();
                 } catch (e) {
                     reactSwal.fire({
                         title: 'Oops!',
@@ -85,10 +164,20 @@ function ContentCarsPage({ cars, total, token }: IContentCarsPageProps): JSX.Ele
                 }
             }
         })
-    }, []);
+    }, [token, handleSearchCars]);
 
-    const handleUpdateCar = useCallback(() => {
+    const handleNewCar = useCallback(() => {
+        setCarFormDrawer({
+            open: true,
+            carSelected: {} as TCar
+        })
+    }, [])
 
+    const handleUpdateCar = useCallback((car: TCar) => {
+        setCarFormDrawer({
+            open: true,
+            carSelected: car
+        })
     }, [])
 
     const getTableButtons = useCallback((car: TCar) => {
@@ -96,20 +185,34 @@ function ContentCarsPage({ cars, total, token }: IContentCarsPageProps): JSX.Ele
             <span className="flex justify-end">
                 <TableManagementButtons
                     onDelete={() => handleDeleteCar(car.id)}
-                    onUpdate={() => console.log('update')}
+                    onUpdate={() => handleUpdateCar(car)}
                 />
             </span>
         )
-    }, [handleDeleteCar]);
+    }, [handleDeleteCar, handleUpdateCar]);
 
-    const handleCarSaved = useCallback(() => {
-
-    }, []);
+    const handleCarSaved = useCallback((action: 'update' | 'create', car?: TCar) => {
+        if (action === 'create') {
+            handleSearchCars(1, true, false);
+        } else {
+            const newCars = _.map(stateCars.cars, (c) => {
+                if (c.id === car?.id) {
+                    return car as TCar
+                }
+                return c
+            })
+            setStateCars({
+                ...stateCars,
+                cars: newCars
+            })
+        }
+    }, [handleSearchCars, stateCars]);
 
     const carsTableData = useMemo(() => {
         return _.map(stateCars.cars, (car) => {
             return {
                 ...car,
+                km: car.km + ' km',
                 buttons: getTableButtons(car)
             }
         });
@@ -120,11 +223,14 @@ function ContentCarsPage({ cars, total, token }: IContentCarsPageProps): JSX.Ele
             <div className='flex justify-between my-4 flex-col-reverse sm:flex-row'>
                 <span className='flex flex-col sm:flex-row sm:basis-96 mt-2 sm:mt-0'>
                     <input className='input input-bordered w-full max-w-3xl' placeholder='Pesquisar pelo modelo ou marca' ref={inputSearchRef} type='text' />
-                    <button className='btn bg-cyan-700 mt-1 sm:mt-0 sm:ml-1'>
+                    <button className='btn bg-cyan-700 mt-1 sm:mt-0 sm:ml-1' onClick={() => handleSearchCars()}>
                         <FaSearch className='w-5 h-6' />
                     </button>
                 </span>
-                <button className='btn bg-cyan-700' onClick={() => setCarFormDrawer(true)}>
+                <button
+                    className='btn bg-cyan-700'
+                    onClick={handleNewCar}
+                >
                     <FaPlus className='mr-1' /> Novo carro
                 </button>
             </div>
@@ -132,13 +238,20 @@ function ContentCarsPage({ cars, total, token }: IContentCarsPageProps): JSX.Ele
                 actualPage={stateCars.actualPage}
                 data={carsTableData}
                 header={carsTableHeader}
-                idObjectKey='label'
+                idObjectKey='id'
+                loading={loadingCars}
                 onChangePage={handleSearchCars}
-                totalRecords={10}
+                totalRecords={stateCars.total}
             />
             <DrawerCarForm
-                onClose={() => setCarFormDrawer(false)}
-                open={carFormDrawer}
+                carSelectedToUpdate={carFormDrawer.carSelected}
+                onCarSaved={handleCarSaved}
+                onClose={() => setCarFormDrawer({
+                    ...carFormDrawer,
+                    open: false
+                })}
+                open={carFormDrawer.open}
+                token={token}
             />
         </div>
     )

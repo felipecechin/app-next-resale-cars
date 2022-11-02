@@ -51,7 +51,7 @@ function ContentHistoryPage({ actions, total, token }: IContentHistoryPageProps)
     const [stateActions, setStateActions] = useState<{ actions: TAction[], total: number, actualPage: number }>({
         actions,
         total,
-        actualPage: 0
+        actualPage: 1
     });
     const [users, setUsers] = useState<TUser[]>([]);
     const filterUser = useRef<HTMLSelectElement>(null);
@@ -63,7 +63,7 @@ function ContentHistoryPage({ actions, total, token }: IContentHistoryPageProps)
             queryParams = queryParams + '&user=' + filterUser.current.value
         }
         if (filterAction.current?.value && filterAction.current.value !== '') {
-            queryParams = queryParams + '&action=' + filterAction.current.value
+            queryParams = queryParams + '&type=' + filterAction.current.value
         }
 
         reactSwal.fire({
@@ -81,6 +81,7 @@ function ContentHistoryPage({ actions, total, token }: IContentHistoryPageProps)
 
             if (!response.error) {
                 const responseSuccess = response.data as IFetchResponseHistorySuccess;
+                console.log(responseSuccess.actions)
                 setStateActions({
                     actions: responseSuccess.actions,
                     total: responseSuccess.total,
@@ -129,6 +130,7 @@ function ContentHistoryPage({ actions, total, token }: IContentHistoryPageProps)
     const historyTableData = useMemo(() => {
         return _.map(stateActions.actions, (action) => {
             return {
+                id: action.id,
                 user: action.user.name,
                 car: action.car.brand + ' - ' + action.car.model,
                 dateHour: getFormattedDateHour(action.occurrence),
