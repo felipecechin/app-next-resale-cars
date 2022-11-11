@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
-import _ from 'lodash';
+import fetcher from '@/utils/fetcher';
 import { reactSwal } from '@/utils/reactSwal';
 import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
 import { useRouter } from 'next/router';
@@ -17,17 +17,14 @@ const AuthContext = createContext({} as TAuthContextData);
 
 interface IGetTokenResponse {
     data: string;
-    error: boolean;
 }
 
 interface ISigninResponse {
     data: string;
-    error: boolean;
 }
 
 interface ISignupResponse {
-    data: string | string[];
-    error: boolean;
+    data: string;
 }
 
 interface IAuthProviderProps {
@@ -40,14 +37,14 @@ export function AuthProvider({ children }: IAuthProviderProps): JSX.Element {
 
     useEffect(() => {
         const getToken = async (): Promise<void> => {
-            const response = await fetch('/api/getToken', { method: 'GET' })
+            const response = await fetcher({
+                method: 'GET',
+                url: '/api/getToken',
+                nextApi: true
+            }) as IGetTokenResponse
 
-            const json: IGetTokenResponse = await response.json();
-
-            if (!json.error) {
-                setToken(json.data)
-                return
-            }
+            setToken(response.data)
+            return
         }
         getToken();
     }, [])
@@ -60,40 +57,37 @@ export function AuthProvider({ children }: IAuthProviderProps): JSX.Element {
         });
         reactSwal.showLoading();
         try {
-            const response = await fetch('/api/signin', { method: 'POST', body: JSON.stringify({ email, password }) })
+            const response = await fetcher({
+                url: '/api/signin',
+                method: 'POST',
+                data: { email, password },
+                nextApi: true,
+            }) as ISigninResponse
 
-            const json: ISigninResponse = await response.json();
-
-            if (!json.error) {
-                setToken(json.data)
-                reactSwal.close()
-                const { redirect } = router.query;
-                if (redirect) {
-                    router.push(redirect as string)
-                } else {
-                    router.push('/')
-                }
-                return
+            setToken(response.data)
+            reactSwal.close()
+            const { redirect } = router.query;
+            if (redirect) {
+                router.push(redirect as string)
+            } else {
+                router.push('/')
             }
-
+        } catch (e) {
             reactSwal.fire({
                 title: 'Oops!',
                 icon: 'error',
                 text: 'E-mail e/ou senha inválidos',
                 confirmButtonColor: sweetAlertOptions.confirmButtonColor,
             })
-        } catch (e) {
-            reactSwal.fire({
-                title: 'Oops!',
-                icon: 'error',
-                text: 'Ocorreu algum erro',
-                confirmButtonColor: sweetAlertOptions.confirmButtonColor,
-            })
         }
     }
 
     const signout = async (): Promise<void> => {
-        await fetch('/api/signout');
+        await fetcher({
+            url: '/api/signout',
+            method: 'GET',
+            nextApi: true,
+        })
         setToken('')
         router.push('/auth');
     };
@@ -106,45 +100,26 @@ export function AuthProvider({ children }: IAuthProviderProps): JSX.Element {
         });
         reactSwal.showLoading();
         try {
-            const response = await fetch(
-                '/api/signup',
-                {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        name,
-                        email,
-                        password,
-                        password_confirmation
-                    })
-                }
-            )
+            const response = await fetcher({
+                url: '/api/signup',
+                method: 'POST',
+                data: {
+                    name,
+                    email,
+                    password,
+                    password_confirmation
+                },
+                nextApi: true,
+            }) as ISignupResponse
 
-            const json: ISignupResponse = await response.json();
-
-            if (!json.error) {
-                setToken(json.data as string)
-                reactSwal.close()
-                const { redirect } = router.query;
-                if (redirect) {
-                    router.push(redirect as string)
-                } else {
-                    router.push('/')
-                }
-                return
+            setToken(response.data)
+            reactSwal.close()
+            const { redirect } = router.query;
+            if (redirect) {
+                router.push(redirect as string)
+            } else {
+                router.push('/')
             }
-
-            const errors = json.data as string[];
-            const listingErrorsToShow = _.map(errors, (error, index) => <li key={index}>{error}{index < errors.length - 1 ? ';' : '.'}</li>)
-            reactSwal.fire({
-                title: 'Oops!',
-                icon: 'error',
-                html: (
-                    <ul className='text-red-700 italic'>
-                        {listingErrorsToShow}
-                    </ul>
-                ),
-                confirmButtonColor: sweetAlertOptions.confirmButtonColor,
-            })
         } catch (e) {
             reactSwal.fire({
                 title: 'Oops!',

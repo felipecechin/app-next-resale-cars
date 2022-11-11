@@ -15,10 +15,6 @@ interface IFetchResponseLoginSuccess {
     user: IFetchResultLoginUser;
 }
 
-interface IFetchResponseLoginError {
-    message: string;
-}
-
 interface IRequestBody {
     email: string;
     password: string;
@@ -26,33 +22,22 @@ interface IRequestBody {
 
 type TResponseJson = {
     data: string;
-    error: boolean;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<TResponseJson>): Promise<void> {
     if (req.method === 'POST') {
         const body: IRequestBody = JSON.parse(req.body);
 
-        try {
-            const response = await fetcher<IFetchResponseLoginSuccess, IFetchResponseLoginError>({
-                method: 'POST',
-                url: '/auth/login',
-                data: {
-                    email: body.email,
-                    password: body.password,
-                }
-            });
-
-            if (!response.error) {
-                const responseSuccess = response.data as IFetchResponseLoginSuccess;
-                storeToken(res, responseSuccess.access_token);
-                return res.json({ data: responseSuccess.access_token, error: false });
+        const response = await fetcher({
+            method: 'POST',
+            url: '/auth/login',
+            data: {
+                email: body.email,
+                password: body.password,
             }
+        }) as IFetchResponseLoginSuccess
 
-            const responseFail = response.data as IFetchResponseLoginError;
-            return res.json({ data: responseFail.message, error: true });
-        } catch (e) {
-            return res.json({ data: 'Ocorreu algum erro', error: true });
-        }
+        storeToken(res, response.access_token);
+        return res.json({ data: response.access_token });
     }
 }

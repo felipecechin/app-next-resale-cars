@@ -74,24 +74,18 @@ function ContentHistoryPage({ actions, total }: IContentHistoryPageProps): JSX.E
         });
         reactSwal.showLoading();
         try {
-            const response = await fetcher<IFetchResponseHistorySuccess, void>({
+            const response = await fetcher({
                 method: 'GET',
                 url: '/actions' + queryParams,
                 auth: token
+            }) as IFetchResponseHistorySuccess
+
+            setStateActions({
+                actions: response.actions,
+                total: response.total,
+                actualPage: page
             });
-
-            if (!response.error) {
-                const responseSuccess = response.data as IFetchResponseHistorySuccess;
-                setStateActions({
-                    actions: responseSuccess.actions,
-                    total: responseSuccess.total,
-                    actualPage: page
-                });
-                reactSwal.close();
-                return
-            }
-
-            throw new Error();
+            reactSwal.close();
         } catch (e) {
             reactSwal.fire({
                 title: 'Oops!',
@@ -104,15 +98,21 @@ function ContentHistoryPage({ actions, total }: IContentHistoryPageProps): JSX.E
 
     useEffect(() => {
         const getUsers = async (): Promise<void> => {
-            const response = await fetcher<IFetchResponseUsersSuccess, void>({
-                method: 'GET',
-                url: '/users',
-                auth: token
-            });
+            try {
+                const response = await fetcher({
+                    method: 'GET',
+                    url: '/users',
+                    auth: token
+                }) as IFetchResponseUsersSuccess
 
-            if (!response.error) {
-                const responseSuccess = response.data as IFetchResponseUsersSuccess;
-                setUsers(responseSuccess.users);
+                setUsers(response.users);
+            } catch (e) {
+                reactSwal.fire({
+                    title: 'Oops!',
+                    icon: 'error',
+                    text: 'Ocorreu algum erro ao buscar os usuários',
+                    confirmButtonColor: sweetAlertOptions.confirmButtonColor,
+                })
             }
         }
         if (token) {

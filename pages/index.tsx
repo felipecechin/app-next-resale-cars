@@ -9,8 +9,8 @@ import MainContent from '@/components/shared/template/MainContent';
 import _ from 'lodash';
 import dynamic from 'next/dynamic';
 import fetcher from '@/utils/fetcher';
-import { getToken } from '@/utils/cookies';
 import { useMemo } from 'react';
+import { withSSRAuth } from '@/utils/withSSRAuth';
 
 type TUserAction = {
     count: number;
@@ -126,33 +126,20 @@ export default function Dashboard({ userActions, typeActions, totalCars }: IDash
     )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ resolvedUrl, req }) => {
-    const token = getToken(req)
-    if (!token) {
-        return {
-            redirect: {
-                destination: '/auth?redirect=' + encodeURIComponent(resolvedUrl),
-                permanent: false
-            }
-        };
-    }
-
-    const response = await fetcher<IFetchResponseDashboardSuccess, void>({
+export const getServerSideProps: GetServerSideProps = withSSRAuth(async ({ token }) => {
+    const response = await fetcher({
         method: 'GET',
         url: '/dashboard',
         auth: token
-    });
+    }) as IFetchResponseDashboardSuccess
 
     let userActions: TUserAction[] = [];
     let typeActions: TTypeActions[] = [];
     let totalCars = 0;
 
-    if (!response.error) {
-        const responseSuccess = response.data as IFetchResponseDashboardSuccess;
-        userActions = responseSuccess.userActions;
-        typeActions = responseSuccess.typeActions;
-        totalCars = responseSuccess.totalCars;
-    }
+    userActions = response.userActions;
+    typeActions = response.typeActions;
+    totalCars = response.totalCars;
 
     return {
         props: {
@@ -161,4 +148,4 @@ export const getServerSideProps: GetServerSideProps = async ({ resolvedUrl, req 
             totalCars
         }
     }
-};
+})

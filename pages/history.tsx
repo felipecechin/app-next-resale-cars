@@ -5,7 +5,7 @@ import Header from '@/components/shared/template/Header';
 import MainContent from '@/components/shared/template/MainContent';
 import { TAction } from '@/types/actions';
 import fetcher from '@/utils/fetcher';
-import { getToken } from '@/utils/cookies';
+import { withSSRAuth } from '@/utils/withSSRAuth';
 
 interface IFetchResponseHistorySuccess {
     actions: TAction[];
@@ -34,31 +34,18 @@ export default function History({ actions, total }: IHistoryProps): JSX.Element 
     )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ resolvedUrl, req }) => {
-    const token = getToken(req)
-    if (!token) {
-        return {
-            redirect: {
-                destination: '/auth?redirect=' + encodeURIComponent(resolvedUrl),
-                permanent: false
-            }
-        };
-    }
-
-    const response = await fetcher<IFetchResponseHistorySuccess, void>({
+export const getServerSideProps: GetServerSideProps = withSSRAuth(async ({ token }) => {
+    const response = await fetcher({
         method: 'GET',
         url: '/actions',
         auth: token
-    });
+    }) as IFetchResponseHistorySuccess
 
     let actions: TAction[] = [];
     let total = 0;
 
-    if (!response.error) {
-        const responseSuccess = response.data as IFetchResponseHistorySuccess;
-        actions = responseSuccess.actions;
-        total = responseSuccess.total;
-    }
+    actions = response.actions;
+    total = response.total;
 
     return {
         props: {
@@ -66,4 +53,4 @@ export const getServerSideProps: GetServerSideProps = async ({ resolvedUrl, req 
             total
         }
     }
-};
+});

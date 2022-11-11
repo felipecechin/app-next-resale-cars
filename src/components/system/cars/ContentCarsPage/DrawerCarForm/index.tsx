@@ -31,10 +31,6 @@ type TFormValues = {
     transmission: string;
 }
 
-interface IFetchResponseCarFormFail {
-    message: string | string[];
-}
-
 interface IDrawerCarFormProps {
     open: boolean;
     onClose: () => void;
@@ -78,30 +74,26 @@ function DrawerCarForm({ open, onClose, carSelectedToUpdate, onCarSaved }: IDraw
                 url = '/cars/' + carSelectedToUpdate.id;
             }
 
-            const response = await fetcher<void, IFetchResponseCarFormFail>({
+            await fetcher({
                 url,
                 method,
                 data,
                 auth: token
             })
 
-            if (!response.error) {
-                reactSwal.fire({
-                    title: 'Sucesso!',
-                    icon: 'success',
-                    text: 'Carro salvo com sucesso!',
-                    confirmButtonColor: sweetAlertOptions.confirmButtonColor,
-                })
-                if (!_.isEmpty(carSelectedToUpdate)) {
-                    onCarSaved('update', { id: carSelectedToUpdate.id, ...data } as unknown as TCar);
-                } else {
-                    onCarSaved('create');
-                }
-                onClose();
-                return
+            reactSwal.fire({
+                title: 'Sucesso!',
+                icon: 'success',
+                text: 'Carro guardado com sucesso!',
+                confirmButtonColor: sweetAlertOptions.confirmButtonColor,
+            })
+            if (!_.isEmpty(carSelectedToUpdate)) {
+                onCarSaved('update', { id: carSelectedToUpdate.id, ...data } as unknown as TCar);
+            } else {
+                onCarSaved('create');
             }
+            onClose();
 
-            throw new Error();
         } catch (e) {
             reactSwal.fire({
                 title: 'Oops!',

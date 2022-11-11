@@ -85,29 +85,22 @@ function ContentCarsPage({ cars, total }: IContentCarsPageProps): JSX.Element {
             setLoadingCars(true)
         }
         try {
-            const response = await fetcher<IFetchResponseCarsSuccess, void>({
+            const response = await fetcher({
                 method: 'GET',
                 url: '/cars' + queryParams,
                 auth: token
+            }) as IFetchResponseCarsSuccess
+
+            setStateCars({
+                cars: response.cars,
+                total: response.total,
+                actualPage: page
             });
-
-            if (!response.error) {
-                const responseSuccess = response.data as IFetchResponseCarsSuccess;
-                setStateCars({
-                    cars: responseSuccess.cars,
-                    total: responseSuccess.total,
-                    actualPage: page
-                });
-                if (showSweetAlertLoading) {
-                    reactSwal.close();
-                } else {
-                    setLoadingCars(false)
-                }
-                return
+            if (showSweetAlertLoading) {
+                reactSwal.close();
+            } else {
+                setLoadingCars(false)
             }
-
-            setLoadingCars(false)
-            throw new Error();
         } catch (e) {
             reactSwal.fire({
                 title: 'Oops!',
@@ -137,24 +130,19 @@ function ContentCarsPage({ cars, total }: IContentCarsPageProps): JSX.Element {
                 });
                 reactSwal.showLoading();
                 try {
-                    const response = await fetcher<void, void>({
+                    await fetcher({
                         method: 'DELETE',
                         url: '/cars/' + id,
                         auth: token
                     });
 
-                    if (!response.error) {
-                        reactSwal.fire({
-                            title: 'Sucesso!',
-                            icon: 'success',
-                            text: 'Carro deletado com sucesso',
-                            confirmButtonColor: sweetAlertOptions.confirmButtonColor,
-                        })
-                        handleSearchCars(1, false, false);
-                        return
-                    }
-
-                    throw new Error();
+                    reactSwal.fire({
+                        title: 'Sucesso!',
+                        icon: 'success',
+                        text: 'Carro deletado com sucesso',
+                        confirmButtonColor: sweetAlertOptions.confirmButtonColor,
+                    })
+                    handleSearchCars(1, false, false);
                 } catch (e) {
                     reactSwal.fire({
                         title: 'Oops!',
