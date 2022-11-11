@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import FetchError from '@/utils/FetchError';
 import env from '@/env';
 
 interface IFetcherArgs {
@@ -5,35 +7,36 @@ interface IFetcherArgs {
     url: string;
     data?: object;
     auth?: string;
+    nextApi?: boolean;
 }
 
-interface IFetcherResponse<T, V> {
-    data: T | V;
-    error: boolean;
-}
-
-const fetcher = async<T, V>(args: IFetcherArgs): Promise<IFetcherResponse<T, V>> => {
-    const { method, url, data, auth } = args;
+const fetcher = async (args: IFetcherArgs): Promise<any> => {
+    const { method, url, data, auth, nextApi } = args;
     const headers: HeadersInit = {
         'Content-Type': 'application/json'
     }
     if (auth) {
         headers['Authorization'] = 'Bearer ' + auth;
     }
-    const response = await fetch(`${env.API}${url}`, {
+    let pathUrl: string;
+    if (nextApi) {
+        pathUrl = `${url}`
+    } else {
+        pathUrl = `${env.API}${url}`
+    }
+    const response = await fetch(pathUrl, {
         method,
         headers,
         body: data ? JSON.stringify(data) : undefined
     });
-    let error = false;
+
+    const responseData = await response.json();
+
     if (!response.ok) {
-        error = true;
+        throw new FetchError(response.status, response.statusText, responseData ? responseData : null)
     }
-    const json = await response.json();
-    return {
-        data: json,
-        error
-    };
+
+    return responseData;
 }
 
 export default fetcher;
