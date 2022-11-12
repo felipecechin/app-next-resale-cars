@@ -26,7 +26,7 @@ type TResponseJson = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<TResponseJson>): Promise<void> {
     if (req.method === 'POST') {
-        const body: IRequestBody = JSON.parse(req.body);
+        const body: IRequestBody = req.body;
 
         const response = await fetcher({
             method: 'POST',

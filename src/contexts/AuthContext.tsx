@@ -37,14 +37,17 @@ export function AuthProvider({ children }: IAuthProviderProps): JSX.Element {
 
     useEffect(() => {
         const getToken = async (): Promise<void> => {
-            const response = await fetcher({
-                method: 'GET',
-                url: '/api/getToken',
-                nextApi: true
-            }) as IGetTokenResponse
+            try {
+                const response = await fetcher({
+                    method: 'GET',
+                    url: '/api/getToken',
+                    nextApi: true
+                }) as IGetTokenResponse
 
-            setToken(response.data)
-            return
+                setToken(response.data)
+            } catch (error) {
+                setToken('')
+            }
         }
         getToken();
     }, [])

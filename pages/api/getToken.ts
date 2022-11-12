@@ -11,4 +11,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (token) {
         return res.json({ data: token });
     }
+    return res.status(500).json({ data: 'No token' });
 }
