@@ -1,19 +1,23 @@
-import { FaStepBackward, FaStepForward } from 'react-icons/fa';
+import { FaStepBackward, FaStepForward } from 'react-icons/fa'
 
-import ReactPaginate from 'react-paginate';
-import styles from './styles.module.scss';
+import ReactPaginate from 'react-paginate'
+import styles from './styles.module.scss'
 
 interface ICustomReactPaginateProps {
-    actualPage: number;
-    pagesNumber: number;
-    onPageClick: (selectedItem: { selected: number }) => void;
+    actualPage: number
+    pagesNumber: number
+    onPageClick: (selectedItem: { selected: number }) => void
 }
 
-function CustomReactPaginate({ actualPage, onPageClick, pagesNumber }: ICustomReactPaginateProps): JSX.Element {
+function CustomReactPaginate({
+    actualPage,
+    onPageClick,
+    pagesNumber,
+}: ICustomReactPaginateProps): JSX.Element {
     return (
         <ReactPaginate
             activeLinkClassName={styles.activeLink}
-            breakLabel="..."
+            breakLabel='...'
             breakLinkClassName={styles.breakLink}
             containerClassName={styles.container}
             disabledLinkClassName={styles.disabledLink}
@@ -32,4 +36,4 @@ function CustomReactPaginate({ actualPage, onPageClick, pagesNumber }: ICustomRe
     )
 }
 
-export default CustomReactPaginate;
+export default CustomReactPaginate

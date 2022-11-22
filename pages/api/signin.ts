@@ -1,43 +1,46 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next'
 
-import fetcher from '@/utils/fetcher';
-import { storeToken } from '@/utils/cookies';
+import fetcher from '@/utils/fetcher'
+import { storeToken } from '@/utils/cookies'
 
 interface IFetchResultLoginUser {
-    id: number;
-    name: string;
-    email: string;
+    id: number
+    name: string
+    email: string
 }
 
 interface IFetchResponseLoginSuccess {
-    access_token: string;
-    token_type: string;
-    user: IFetchResultLoginUser;
+    access_token: string
+    token_type: string
+    user: IFetchResultLoginUser
 }
 
 interface IRequestBody {
-    email: string;
-    password: string;
+    email: string
+    password: string
 }
 
 type TResponseJson = {
-    data: string;
+    data: string
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<TResponseJson>): Promise<void> {
+export default async function handler(
+    req: NextApiRequest,
+    res: NextApiResponse<TResponseJson>
+): Promise<void> {
     if (req.method === 'POST') {
-        const body: IRequestBody = req.body;
+        const body: IRequestBody = req.body
 
-        const response = await fetcher({
+        const response = (await fetcher({
             method: 'POST',
             url: '/auth/login',
             data: {
                 email: body.email,
                 password: body.password,
-            }
-        }) as IFetchResponseLoginSuccess
+            },
+        })) as IFetchResponseLoginSuccess
 
-        storeToken(res, response.access_token);
-        return res.json({ data: response.access_token });
+        storeToken(res, response.access_token)
+        return res.json({ data: response.access_token })
     }
 }

@@ -1,55 +1,60 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react'
 
-import fetcher from '@/utils/fetcher';
-import { reactSwal } from '@/utils/reactSwal';
-import { sweetAlertOptions } from '@/utils/sweetAlertOptions';
-import { useRouter } from 'next/router';
+import fetcher from '@/utils/fetcher'
+import { reactSwal } from '@/utils/reactSwal'
+import { sweetAlertOptions } from '@/utils/sweetAlertOptions'
+import { useRouter } from 'next/router'
 
 type TAuthContextData = {
-    token: string;
-    signin: (email: string, password: string) => Promise<void>;
-    signout: () => Promise<void>;
-    signup: (name: string, email: string, password: string, password_confirmation: string) => Promise<void>;
+    token: string
+    signin: (email: string, password: string) => Promise<void>
+    signout: () => Promise<void>
+    signup: (
+        name: string,
+        email: string,
+        password: string,
+        password_confirmation: string
+    ) => Promise<void>
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const AuthContext = createContext({} as TAuthContextData);
+const AuthContext = createContext({} as TAuthContextData)
 
 interface IGetTokenResponse {
-    data: string;
+    data: string
 }
 
 interface ISigninResponse {
-    data: string;
+    data: string
 }
 
 interface ISignupResponse {
-    data: string;
+    data: string
 }
 
 interface IAuthProviderProps {
-    children: React.ReactNode;
+    children: React.ReactNode
 }
 
 export function AuthProvider({ children }: IAuthProviderProps): JSX.Element {
-    const [token, setToken] = useState('');
-    const router = useRouter();
+    const [token, setToken] = useState('')
+    const router = useRouter()
 
     useEffect(() => {
         const getToken = async (): Promise<void> => {
             try {
-                const response = await fetcher({
+                const response = (await fetcher({
                     method: 'GET',
                     url: '/api/getToken',
-                    nextApi: true
-                }) as IGetTokenResponse
+                    nextApi: true,
+                })) as IGetTokenResponse
 
                 setToken(response.data)
             } catch (error) {
                 setToken('')
             }
         }
-        getToken();
+        getToken()
     }, [])
 
     const signin = async (email: string, password: string): Promise<void> => {
@@ -57,19 +62,19 @@ export function AuthProvider({ children }: IAuthProviderProps): JSX.Element {
             title: 'Por favor, aguarde...',
             allowEscapeKey: false,
             allowOutsideClick: false,
-        });
-        reactSwal.showLoading();
+        })
+        reactSwal.showLoading()
         try {
-            const response = await fetcher({
+            const response = (await fetcher({
                 url: '/api/signin',
                 method: 'POST',
                 data: { email, password },
                 nextApi: true,
-            }) as ISigninResponse
+            })) as ISigninResponse
 
             setToken(response.data)
             reactSwal.close()
-            const { redirect } = router.query;
+            const { redirect } = router.query
             if (redirect) {
                 router.push(redirect as string)
             } else {
@@ -92,32 +97,37 @@ export function AuthProvider({ children }: IAuthProviderProps): JSX.Element {
             nextApi: true,
         })
         setToken('')
-        router.push('/auth');
-    };
+        router.push('/auth')
+    }
 
-    const signup = async (name: string, email: string, password: string, password_confirmation: string): Promise<void> => {
+    const signup = async (
+        name: string,
+        email: string,
+        password: string,
+        password_confirmation: string
+    ): Promise<void> => {
         reactSwal.fire({
             title: 'Salvando dados e logando. Aguarde...',
             allowEscapeKey: false,
             allowOutsideClick: false,
-        });
-        reactSwal.showLoading();
+        })
+        reactSwal.showLoading()
         try {
-            const response = await fetcher({
+            const response = (await fetcher({
                 url: '/api/signup',
                 method: 'POST',
                 data: {
                     name,
                     email,
                     password,
-                    password_confirmation
+                    password_confirmation,
                 },
                 nextApi: true,
-            }) as ISignupResponse
+            })) as ISignupResponse
 
             setToken(response.data)
             reactSwal.close()
-            const { redirect } = router.query;
+            const { redirect } = router.query
             if (redirect) {
                 router.push(redirect as string)
             } else {

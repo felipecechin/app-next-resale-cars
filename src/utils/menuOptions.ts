@@ -1,22 +1,22 @@
-import { FaCar, FaChartLine, FaHistory } from 'react-icons/fa';
+import { FaCar, FaChartLine, FaHistory } from 'react-icons/fa'
 
 export const menuOptions = [
     {
         key: 'dashboard',
         label: 'Dashboard',
         icon: FaChartLine,
-        href: '/'
+        href: '/',
     },
     {
         key: 'cars',
         label: 'Carros',
         icon: FaCar,
-        href: '/cars'
+        href: '/cars',
     },
     {
         key: 'history',
         label: 'Histórico de ações',
         icon: FaHistory,
-        href: '/history'
-    }
+        href: '/history',
+    },
 ]

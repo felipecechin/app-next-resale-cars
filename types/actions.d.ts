@@ -1,14 +1,14 @@
 export type TAction = {
-    id: number;
-    type: 'C' | 'D' | 'U';
-    occurrence: string;
+    id: number
+    type: 'C' | 'D' | 'U'
+    occurrence: string
     user: {
-        id: number;
-        name: string;
-    },
+        id: number
+        name: string
+    }
     car: {
-        id: number;
-        brand: string;
-        model: string;
+        id: number
+        brand: string
+        model: string
     }
 }

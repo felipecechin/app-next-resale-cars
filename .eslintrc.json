@@ -1,10 +1,9 @@
 {
-    "plugins": [
-        "@typescript-eslint"
-    ],
+    "plugins": ["@typescript-eslint"],
     "extends": [
         "next/core-web-vitals",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "prettier"
     ],
     "rules": {
         "@typescript-eslint/no-unused-vars": "error",
@@ -15,10 +14,7 @@
         "react/jsx-sort-props": 2,
         "react/react-in-jsx-scope": "off",
         "no-mixed-spaces-and-tabs": "off",
-        "quotes": [
-            "error",
-            "single"
-        ],
+        "quotes": ["error", "single"],
         "@typescript-eslint/explicit-function-return-type": [
             "error",
             {
@@ -29,15 +25,11 @@
             "warn",
             {
                 "selector": "variable",
-                "format": [
-                    "camelCase"
-                ]
+                "format": ["camelCase"]
             },
             {
                 "selector": "interface",
-                "format": [
-                    "PascalCase"
-                ],
+                "format": ["PascalCase"],
                 "custom": {
                     "regex": "^I[A-Z]",
                     "match": true
@@ -45,9 +37,7 @@
             },
             {
                 "selector": "typeAlias",
-                "format": [
-                    "PascalCase"
-                ],
+                "format": ["PascalCase"],
                 "custom": {
                     "regex": "^T[A-Z]",
                     "match": true

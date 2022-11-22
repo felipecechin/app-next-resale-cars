@@ -1,44 +1,42 @@
-import { FaPencilAlt, FaTrash } from 'react-icons/fa';
+import { FaPencilAlt, FaTrash } from 'react-icons/fa'
 
-import classNames from '@/utils/classNames';
-import styles from './styles.module.scss';
+import classNames from '@/utils/classNames'
+import styles from './styles.module.scss'
 
 interface ITableManagementButtonsProps {
-    onUpdate?: () => void;
-    onDelete?: () => void;
+    onUpdate?: () => void
+    onDelete?: () => void
 }
 
-function TableManagementButtons({ onUpdate = undefined, onDelete = undefined }: ITableManagementButtonsProps): JSX.Element {
+function TableManagementButtons({
+    onUpdate = undefined,
+    onDelete = undefined,
+}: ITableManagementButtonsProps): JSX.Element {
     return (
         <span className={styles.managementButtonsSpan}>
-            {onUpdate &&
+            {onUpdate && (
                 <button
-                    className={
-                        classNames(styles.buttonUpdate,
-                            onDelete === undefined && styles.buttonRoundedRight,
-                        )
-                    }
+                    className={classNames(
+                        styles.buttonUpdate,
+                        onDelete === undefined && styles.buttonRoundedRight
+                    )}
                     onClick={onUpdate}
-                    type="button"
+                    type='button'
                 >
-                    <FaPencilAlt
-                        aria-hidden="true"
-                    />
+                    <FaPencilAlt aria-hidden='true' />
                 </button>
-            }
-            {onDelete &&
+            )}
+            {onDelete && (
                 <button
                     className={styles.buttonDelete}
                     onClick={onDelete}
-                    type="button"
+                    type='button'
                 >
-                    <FaTrash
-                        aria-hidden="true"
-                    />
+                    <FaTrash aria-hidden='true' />
                 </button>
-            }
+            )}
         </span>
     )
 }
 
-export default TableManagementButtons;
+export default TableManagementButtons
