@@ -1,18 +1,12 @@
 import * as yup from 'yup'
 
-import { SubmitHandler, useForm } from 'react-hook-form'
-
 import { FaSignInAlt } from 'react-icons/fa'
 import MessageError from '@/components/shared/MessageError'
+import { SubmitHandler } from 'react-hook-form'
 import { useAuth } from '@/contexts/AuthContext'
 import { useCallback } from 'react'
+import { useFormWithSchema } from '@/hooks/useFormWithSchema'
 import { yupMessages } from '@/utils/yupMessages'
-import { yupResolver } from '@hookform/resolvers/yup'
-
-type TFormValues = {
-    email: string
-    password: string
-}
 
 const loginSchema = yup.object({
     email: yup.string().email(yupMessages.email).required(yupMessages.required),
@@ -26,11 +20,9 @@ function LoginForm(): JSX.Element {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<TFormValues>({
-        resolver: yupResolver(loginSchema),
-    })
+    } = useFormWithSchema(loginSchema)
 
-    const submitLoginForm = useCallback<SubmitHandler<TFormValues>>(
+    const submitLoginForm = useCallback<SubmitHandler<yup.Asserts<typeof loginSchema>>>(
         async ({ email, password }): Promise<void> => {
             signin(email, password)
         },
@@ -60,7 +52,7 @@ function LoginForm(): JSX.Element {
                 />
                 <MessageError message={errors.password?.message as string} />
             </div>
-            <button className='flex items-center justify-center w-full py-4 px-6 mb-6 text-center text-lg leading-6 text-white font-extrabold bg-cyan-800 hover:bg-cyan-900 border-3 border-indigo-900 shadow rounded transition duration-200'>
+            <button className='flex items-center justify-center w-full py-4 px-6 mb-6 text-center text-lg leading-6 text-white font-extrabold bg-cyan-800 hover:bg-cyan-900 shadow rounded transition duration-200'>
                 <FaSignInAlt className='w-6 h-6 mr-2' /> Entrar
             </button>
         </form>

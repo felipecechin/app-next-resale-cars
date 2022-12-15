@@ -1,19 +1,19 @@
 import * as yup from 'yup'
 
-import { SubmitHandler, useForm } from 'react-hook-form'
 import { useCallback, useEffect } from 'react'
 
 import Drawer from '@/components/shared/Drawer'
 import InputGroup from '@/components/shared/form/InputGroup'
 import SelectGroup from '@/components/shared/form/SelectGroup'
+import { SubmitHandler } from 'react-hook-form'
 import { TCar } from '@/types/cars'
-import _ from 'lodash'
 import fetcher from '@/utils/fetcher'
+import lodashIsEmpty from 'lodash/isEmpty'
 import { reactSwal } from '@/utils/reactSwal'
 import { sweetAlertOptions } from '@/utils/sweetAlertOptions'
 import { useAuth } from '@/contexts/AuthContext'
+import { useFormWithSchema } from '@/hooks/useFormWithSchema'
 import { yupMessages } from '@/utils/yupMessages'
-import { yupResolver } from '@hookform/resolvers/yup'
 
 const carSchema = yup.object({
     brand: yup.string().required(yupMessages.required),
@@ -27,14 +27,6 @@ const carSchema = yup.object({
     transmission: yup.string().required(yupMessages.required),
 })
 
-type TFormValues = {
-    brand: string
-    model: string
-    km: number
-    color: string
-    transmission: string
-}
-
 interface IDrawerCarFormProps {
     open: boolean
     onClose: () => void
@@ -42,24 +34,17 @@ interface IDrawerCarFormProps {
     onCarSaved: (action: 'create' | 'update', car?: TCar) => void
 }
 
-function DrawerCarForm({
-    open,
-    onClose,
-    carSelectedToUpdate,
-    onCarSaved,
-}: IDrawerCarFormProps): JSX.Element {
+function DrawerCarForm({ open, onClose, carSelectedToUpdate, onCarSaved }: IDrawerCarFormProps): JSX.Element {
     const { token } = useAuth()
     const {
         register,
         handleSubmit,
         formState: { errors },
         reset,
-    } = useForm<TFormValues>({
-        resolver: yupResolver(carSchema),
-    })
+    } = useFormWithSchema(carSchema)
 
     useEffect(() => {
-        if (!_.isEmpty(carSelectedToUpdate)) {
+        if (!lodashIsEmpty(carSelectedToUpdate)) {
             reset({
                 brand: carSelectedToUpdate.brand,
                 model: carSelectedToUpdate.model,
@@ -70,21 +55,20 @@ function DrawerCarForm({
         } else {
             reset({})
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [carSelectedToUpdate])
+    }, [carSelectedToUpdate, reset])
 
-    const submitCarForm = useCallback<SubmitHandler<TFormValues>>(
+    const submitCarForm = useCallback<SubmitHandler<yup.Asserts<typeof carSchema>>>(
         async (data): Promise<void> => {
             reactSwal.fire({
                 title: 'Por favor, aguarde...',
                 allowEscapeKey: false,
                 allowOutsideClick: false,
             })
-            reactSwal.showLoading()
+            reactSwal.showLoading(null)
             try {
                 let method = 'POST'
                 let url = '/cars'
-                if (!_.isEmpty(carSelectedToUpdate)) {
+                if (!lodashIsEmpty(carSelectedToUpdate)) {
                     method = 'PUT'
                     url = '/cars/' + carSelectedToUpdate.id
                 }
@@ -102,7 +86,7 @@ function DrawerCarForm({
                     text: 'Carro guardado com sucesso!',
                     confirmButtonColor: sweetAlertOptions.confirmButtonColor,
                 })
-                if (!_.isEmpty(carSelectedToUpdate)) {
+                if (!lodashIsEmpty(carSelectedToUpdate)) {
                     onCarSaved('update', {
                         id: carSelectedToUpdate.id,
                         ...data,

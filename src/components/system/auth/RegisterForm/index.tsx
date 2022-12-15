@@ -1,30 +1,22 @@
 import * as yup from 'yup'
 
-import { SubmitHandler, useForm } from 'react-hook-form'
-
 import { FaSignInAlt } from 'react-icons/fa'
 import MessageError from '@/components/shared/MessageError'
+import { SubmitHandler } from 'react-hook-form'
 import { useAuth } from '@/contexts/AuthContext'
 import { useCallback } from 'react'
+import { useFormWithSchema } from '@/hooks/useFormWithSchema'
 import { yupMessages } from '@/utils/yupMessages'
-import { yupResolver } from '@hookform/resolvers/yup'
 
 const registerSchema = yup.object({
     name: yup.string().required(yupMessages.required),
     email: yup.string().email(yupMessages.email).required(yupMessages.required),
     password: yup.string().required(yupMessages.required),
-    password_confirmation: yup
+    confirmPassword: yup
         .string()
         .required(yupMessages.required)
         .oneOf([yup.ref('password')], 'As senhas devem ser iguais'),
 })
-
-type TFormValues = {
-    name: string
-    email: string
-    password: string
-    password_confirmation: string
-}
 
 function RegisterForm(): JSX.Element {
     const { signup } = useAuth()
@@ -33,19 +25,12 @@ function RegisterForm(): JSX.Element {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<TFormValues>({
-        resolver: yupResolver(registerSchema),
-    })
+    } = useFormWithSchema(registerSchema)
 
-    const submitRegisterForm = useCallback<SubmitHandler<TFormValues>>(
+    const submitRegisterForm = useCallback<SubmitHandler<yup.Asserts<typeof registerSchema>>>(
         async (data): Promise<void> => {
-            const {
-                name,
-                email,
-                password,
-                password_confirmation: passwordConfirmation,
-            } = data
-            signup(name, email, password, passwordConfirmation)
+            const { name, email, password, confirmPassword } = data
+            signup(name, email, password, confirmPassword)
         },
         [signup]
     )
@@ -84,21 +69,17 @@ function RegisterForm(): JSX.Element {
                 <MessageError message={errors.password?.message as string} />
             </div>
             <div className='mb-6'>
-                <label className='block mb-2 font-extrabold'>
-                    Confirmação de senha
-                </label>
+                <label className='block mb-2 font-extrabold'>Confirmação de senha</label>
                 <input
                     className='inline-block w-full p-4 leading-6 text-lg font-extrabold placeholder-cyan-700 bg-white shadow border-2 border-cyan-700 rounded'
                     placeholder='**********'
                     type='password'
-                    {...register('password_confirmation')}
+                    {...register('confirmPassword')}
                     autoComplete='password'
                 />
-                <MessageError
-                    message={errors.password_confirmation?.message as string}
-                />
+                <MessageError message={errors.confirmPassword?.message as string} />
             </div>
-            <button className='flex items-center justify-center w-full py-4 px-6 mb-6 text-center text-lg leading-6 text-white font-extrabold bg-cyan-800 hover:bg-cyan-900 border-3 border-indigo-900 shadow rounded transition duration-200'>
+            <button className='flex items-center justify-center w-full py-4 px-6 mb-6 text-center text-lg leading-6 text-white font-extrabold bg-cyan-800 hover:bg-cyan-900 shadow rounded transition duration-200'>
                 <FaSignInAlt className='w-6 h-6 mr-2' /> Registrar-me
             </button>
         </form>
