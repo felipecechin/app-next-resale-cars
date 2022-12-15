@@ -9,12 +9,7 @@ type TAuthContextData = {
     token: string
     signin: (email: string, password: string) => Promise<void>
     signout: () => Promise<void>
-    signup: (
-        name: string,
-        email: string,
-        password: string,
-        password_confirmation: string
-    ) => Promise<void>
+    signup: (name: string, email: string, password: string, confirmPassword: string) => Promise<void>
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -63,7 +58,7 @@ export function AuthProvider({ children }: IAuthProviderProps): JSX.Element {
             allowEscapeKey: false,
             allowOutsideClick: false,
         })
-        reactSwal.showLoading()
+        reactSwal.showLoading(null)
         try {
             const response = (await fetcher({
                 url: '/api/signin',
@@ -100,18 +95,13 @@ export function AuthProvider({ children }: IAuthProviderProps): JSX.Element {
         router.push('/auth')
     }
 
-    const signup = async (
-        name: string,
-        email: string,
-        password: string,
-        password_confirmation: string
-    ): Promise<void> => {
+    const signup = async (name: string, email: string, password: string, confirmPassword: string): Promise<void> => {
         reactSwal.fire({
             title: 'Salvando dados e logando. Aguarde...',
             allowEscapeKey: false,
             allowOutsideClick: false,
         })
-        reactSwal.showLoading()
+        reactSwal.showLoading(null)
         try {
             const response = (await fetcher({
                 url: '/api/signup',
@@ -120,7 +110,7 @@ export function AuthProvider({ children }: IAuthProviderProps): JSX.Element {
                     name,
                     email,
                     password,
-                    password_confirmation,
+                    confirmPassword,
                 },
                 nextApi: true,
             })) as ISignupResponse
@@ -143,11 +133,7 @@ export function AuthProvider({ children }: IAuthProviderProps): JSX.Element {
         }
     }
 
-    return (
-        <AuthContext.Provider value={{ token, signin, signout, signup }}>
-            {children}
-        </AuthContext.Provider>
-    )
+    return <AuthContext.Provider value={{ token, signin, signout, signup }}>{children}</AuthContext.Provider>
 }
 
 export const useAuth = (): TAuthContextData => useContext(AuthContext)
