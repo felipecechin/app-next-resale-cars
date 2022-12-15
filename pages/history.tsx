@@ -1,7 +1,7 @@
 import ContentHistoryPage from '@/components/system/history/ContentHistoryPage'
 import Footer from '@/components/shared/template/Footer'
-import { GetServerSideProps } from 'next'
 import Header from '@/components/shared/template/Header'
+import { InferGetServerSidePropsType } from 'next'
 import MainContent from '@/components/shared/template/MainContent'
 import { TAction } from '@/types/actions'
 import fetcher from '@/utils/fetcher'
@@ -12,15 +12,30 @@ interface IFetchResponseHistorySuccess {
     total: number
 }
 
-interface IHistoryProps {
-    actions: TAction[]
-    total: number
-}
+type THistoryProps = IFetchResponseHistorySuccess
+
+export const getServerSideProps = withSSRAuth<THistoryProps>(async ({ token }) => {
+    const response = (await fetcher({
+        method: 'GET',
+        url: '/actions/history',
+        auth: token,
+    })) as IFetchResponseHistorySuccess
+
+    const actions = response.actions
+    const total = response.total
+
+    return {
+        props: {
+            actions,
+            total,
+        },
+    }
+})
 
 export default function History({
     actions,
     total,
-}: IHistoryProps): JSX.Element {
+}: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
     return (
         <>
             <Header pageTitle='Histórico de ações' />
@@ -34,26 +49,3 @@ export default function History({
         </>
     )
 }
-
-export const getServerSideProps: GetServerSideProps = withSSRAuth(
-    async ({ token }) => {
-        const response = (await fetcher({
-            method: 'GET',
-            url: '/actions',
-            auth: token,
-        })) as IFetchResponseHistorySuccess
-
-        let actions: TAction[] = []
-        let total = 0
-
-        actions = response.actions
-        total = response.total
-
-        return {
-            props: {
-                actions,
-                total,
-            },
-        }
-    }
-)

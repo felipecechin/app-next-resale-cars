@@ -1,50 +1,47 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
+import FetchError from '@/utils/FetchError'
 import fetcher from '@/utils/fetcher'
 import { storeToken } from '@/utils/cookies'
 
-interface IFetchResultLoginUser {
-    id: number
-    name: string
-    email: string
-}
-
 interface IFetchResponseRegisterSuccess {
     access_token: string
-    token_type: string
-    user: IFetchResultLoginUser
 }
 
 interface IRequestBody {
     name: string
     email: string
     password: string
-    password_confirmation: string
+    confirmPassword: string
 }
 
-type TResponseJson = {
-    data: string | string[]
+interface INextApiRequestWithBody extends NextApiRequest {
+    body: IRequestBody
 }
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<TResponseJson>
-): Promise<void> {
+export default async function handler(req: INextApiRequestWithBody, res: NextApiResponse): Promise<void> {
     if (req.method === 'POST') {
-        const body: IRequestBody = JSON.parse(req.body)
+        try {
+            const response = (await fetcher({
+                method: 'POST',
+                url: '/users/register',
+                data: {
+                    name: req.body.name,
+                    email: req.body.email,
+                    password: req.body.password,
+                    confirmPassword: req.body.confirmPassword,
+                },
+            })) as IFetchResponseRegisterSuccess
 
-        const response = (await fetcher({
-            method: 'POST',
-            url: '/auth/register',
-            data: {
-                name: body.name,
-                email: body.email,
-                password: body.password,
-                password_confirmation: body.password_confirmation,
-            },
-        })) as IFetchResponseRegisterSuccess
-
-        storeToken(res, response.access_token)
-        return res.json({ data: response.access_token })
+            storeToken(res, response.access_token)
+            return res.json({ data: response.access_token })
+        } catch (e) {
+            if (e instanceof FetchError) {
+                return res.status(e.status).json(e.data)
+            }
+            return res.status(500).json({
+                message: 'Unkown error',
+            })
+        }
     }
 }

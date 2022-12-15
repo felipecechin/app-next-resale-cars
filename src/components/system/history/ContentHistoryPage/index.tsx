@@ -2,9 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { TAction } from '@/types/actions'
 import Table from '@/components/shared/Table'
-import _ from 'lodash'
 import fetcher from '@/utils/fetcher'
 import { getFormattedDateHour } from '@/utils/getFormattedDateHour'
+import lodashMap from 'lodash/map'
 import { reactSwal } from '@/utils/reactSwal'
 import { sweetAlertOptions } from '@/utils/sweetAlertOptions'
 import { useAuth } from '@/contexts/AuthContext'
@@ -47,10 +47,7 @@ interface IContentHistoryPageProps {
     total: number
 }
 
-function ContentHistoryPage({
-    actions,
-    total,
-}: IContentHistoryPageProps): JSX.Element {
+function ContentHistoryPage({ actions, total }: IContentHistoryPageProps): JSX.Element {
     const { token } = useAuth()
     const [stateActions, setStateActions] = useState<{
         actions: TAction[]
@@ -71,12 +68,8 @@ function ContentHistoryPage({
             if (filterUser.current?.value && filterUser.current.value !== '') {
                 queryParams = queryParams + '&user=' + filterUser.current.value
             }
-            if (
-                filterAction.current?.value &&
-                filterAction.current.value !== ''
-            ) {
-                queryParams =
-                    queryParams + '&type=' + filterAction.current.value
+            if (filterAction.current?.value && filterAction.current.value !== '') {
+                queryParams = queryParams + '&type=' + filterAction.current.value
             }
 
             reactSwal.fire({
@@ -84,11 +77,11 @@ function ContentHistoryPage({
                 allowEscapeKey: false,
                 allowOutsideClick: false,
             })
-            reactSwal.showLoading()
+            reactSwal.showLoading(null)
             try {
                 const response = (await fetcher({
                     method: 'GET',
-                    url: '/actions' + queryParams,
+                    url: '/actions/history' + queryParams,
                     auth: token,
                 })) as IFetchResponseHistorySuccess
 
@@ -135,7 +128,7 @@ function ContentHistoryPage({
     }, [token])
 
     const selectUsersOptions = useMemo(() => {
-        return _.map(users, (user) => {
+        return lodashMap(users, (user) => {
             return (
                 <option
                     key={user.id}
@@ -148,18 +141,13 @@ function ContentHistoryPage({
     }, [users])
 
     const historyTableData = useMemo(() => {
-        return _.map(stateActions.actions, (action) => {
+        return lodashMap(stateActions.actions, (action) => {
             return {
                 id: action.id,
                 user: action.user.name,
                 car: action.car.brand + ' - ' + action.car.model,
                 dateHour: getFormattedDateHour(action.occurrence),
-                action:
-                    action.type === 'C'
-                        ? 'Cadastro'
-                        : action.type === 'U'
-                        ? 'Atualização'
-                        : 'Deleção',
+                action: action.type === 'C' ? 'Cadastro' : action.type === 'U' ? 'Atualização' : 'Deleção',
             }
         })
     }, [stateActions])

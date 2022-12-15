@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import Chart from 'react-apexcharts'
-import _ from 'lodash'
+import lodashMap from 'lodash/map'
 
 interface IApexColumnChartProps {
     data: object[]
@@ -26,10 +26,10 @@ function ApexColumnChart({
     const [options, setOptions] = useState({})
 
     useEffect(() => {
-        const seriesData = _.map(data, dataKey)
-        const categories = _.map(data, categoriesKey)
+        const seriesData = lodashMap(data, dataKey)
+        const categories = lodashMap(data, categoriesKey)
         const breakpoints = [640, 768, 1024, 1280]
-        const responsiveHeights = _.map(height, (item, index) => {
+        const responsiveHeights = lodashMap(height, (item, index) => {
             return {
                 breakpoint: breakpoints[index],
                 options: {
@@ -69,11 +69,7 @@ function ApexColumnChart({
 
     return (
         <Chart
-            height={
-                height && height[height.length - 1]
-                    ? height[height.length - 1]
-                    : 'auto'
-            }
+            height={height && height[height.length - 1] ? height[height.length - 1] : 'auto'}
             options={options}
             series={series}
             type='bar'

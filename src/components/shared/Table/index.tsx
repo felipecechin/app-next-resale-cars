@@ -1,14 +1,11 @@
 import LoadingSpinner from '@/components/shared/LoadingSpinner'
-import _ from 'lodash'
 import dynamic from 'next/dynamic'
+import lodashMap from 'lodash/map'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const CustomReactPaginate = dynamic(
-    () => import('@/components/shared/CustomReactPaginate'),
-    {
-        ssr: false,
-    }
-)
+const CustomReactPaginate = dynamic(() => import('@/components/shared/CustomReactPaginate'), {
+    ssr: false,
+})
 
 type THeaderObject = {
     key: string
@@ -40,7 +37,7 @@ function Table({
                 <table className='table table-zebra w-full'>
                     <thead>
                         <tr>
-                            {_.map(header, (row) => {
+                            {lodashMap(header, (row) => {
                                 return (
                                     <th
                                         key={row.key}
@@ -54,31 +51,19 @@ function Table({
                     </thead>
                     <tbody>
                         {!loading &&
-                            _.map(data, (row) => {
+                            lodashMap(data, (row) => {
                                 return (
                                     <tr key={String(row[idObjectKey])}>
-                                        {_.map(header, (headRow, cellIndex) => {
+                                        {lodashMap(header, (headRow, cellIndex) => {
                                             if (cellIndex === 0) {
                                                 return (
-                                                    <th
-                                                        key={
-                                                            row[idObjectKey] +
-                                                            '-' +
-                                                            headRow.key
-                                                        }
-                                                    >
+                                                    <th key={row[idObjectKey] + '-' + headRow.key}>
                                                         {row[headRow.key]}
                                                     </th>
                                                 )
                                             } else {
                                                 return (
-                                                    <td
-                                                        key={
-                                                            row[idObjectKey] +
-                                                            '-' +
-                                                            headRow.key
-                                                        }
-                                                    >
+                                                    <td key={row[idObjectKey] + '-' + headRow.key}>
                                                         {row[headRow.key]}
                                                     </td>
                                                 )
@@ -93,9 +78,7 @@ function Table({
                                     className='bg-gray-100'
                                     colSpan={header.length}
                                 >
-                                    <p className='italic font-sm'>
-                                        Nenhum registro encontrado.
-                                    </p>
+                                    <p className='italic font-sm'>Nenhum registro encontrado.</p>
                                 </td>
                             </tr>
                         )}
@@ -121,9 +104,7 @@ function Table({
                 {!loading && (
                     <CustomReactPaginate
                         actualPage={actualPage - 1}
-                        onPageClick={({ selected }) =>
-                            onChangePage(selected + 1)
-                        }
+                        onPageClick={({ selected }) => onChangePage(selected + 1)}
                         pagesNumber={Math.ceil(totalRecords / 5)}
                     />
                 )}

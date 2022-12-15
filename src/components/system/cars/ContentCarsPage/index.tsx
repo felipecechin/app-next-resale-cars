@@ -5,8 +5,8 @@ import DrawerCarForm from './DrawerCarForm'
 import { TCar } from '@/types/cars'
 import Table from '@/components/shared/Table'
 import TableManagementButtons from '@/components/shared/TableManagementButtons'
-import _ from 'lodash'
 import fetcher from '@/utils/fetcher'
+import lodashMap from 'lodash/map'
 import { reactSwal } from '@/utils/reactSwal'
 import { sweetAlertOptions } from '@/utils/sweetAlertOptions'
 import { useAuth } from '@/contexts/AuthContext'
@@ -78,12 +78,8 @@ function ContentCarsPage({ cars, total }: IContentCarsPageProps): JSX.Element {
                 }
             }
 
-            if (
-                inputSearchRef.current?.value &&
-                inputSearchRef.current.value !== ''
-            ) {
-                queryParams =
-                    queryParams + '&search=' + inputSearchRef.current.value
+            if (inputSearchRef.current?.value && inputSearchRef.current.value !== '') {
+                queryParams = queryParams + '&search=' + inputSearchRef.current.value
             }
 
             if (showSweetAlertLoading) {
@@ -92,7 +88,7 @@ function ContentCarsPage({ cars, total }: IContentCarsPageProps): JSX.Element {
                     allowEscapeKey: false,
                     allowOutsideClick: false,
                 })
-                reactSwal.showLoading()
+                reactSwal.showLoading(null)
             } else {
                 setLoadingCars(true)
             }
@@ -145,7 +141,7 @@ function ContentCarsPage({ cars, total }: IContentCarsPageProps): JSX.Element {
                             allowEscapeKey: false,
                             allowOutsideClick: false,
                         })
-                        reactSwal.showLoading()
+                        reactSwal.showLoading(null)
                         try {
                             await fetcher({
                                 method: 'DELETE',
@@ -157,8 +153,7 @@ function ContentCarsPage({ cars, total }: IContentCarsPageProps): JSX.Element {
                                 title: 'Sucesso!',
                                 icon: 'success',
                                 text: 'Carro deletado com sucesso',
-                                confirmButtonColor:
-                                    sweetAlertOptions.confirmButtonColor,
+                                confirmButtonColor: sweetAlertOptions.confirmButtonColor,
                             })
                             handleSearchCars(1, false, false)
                         } catch (e) {
@@ -166,8 +161,7 @@ function ContentCarsPage({ cars, total }: IContentCarsPageProps): JSX.Element {
                                 title: 'Oops!',
                                 icon: 'error',
                                 text: 'Ocorreu algum erro ao remover carro',
-                                confirmButtonColor:
-                                    sweetAlertOptions.confirmButtonColor,
+                                confirmButtonColor: sweetAlertOptions.confirmButtonColor,
                             })
                         }
                     }
@@ -209,7 +203,7 @@ function ContentCarsPage({ cars, total }: IContentCarsPageProps): JSX.Element {
             if (action === 'create') {
                 handleSearchCars(1, true, false)
             } else {
-                const newCars = _.map(stateCars.cars, (c) => {
+                const newCars = lodashMap(stateCars.cars, (c) => {
                     if (c.id === car?.id) {
                         return car as TCar
                     }
@@ -225,7 +219,7 @@ function ContentCarsPage({ cars, total }: IContentCarsPageProps): JSX.Element {
     )
 
     const carsTableData = useMemo(() => {
-        return _.map(stateCars.cars, (car) => {
+        return lodashMap(stateCars.cars, (car) => {
             return {
                 ...car,
                 km: car.km + ' km',

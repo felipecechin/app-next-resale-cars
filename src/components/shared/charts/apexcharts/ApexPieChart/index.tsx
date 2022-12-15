@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import Chart from 'react-apexcharts'
-import _ from 'lodash'
+import lodashMap from 'lodash/map'
 
 interface IApexPieChartProps {
     responsiveWidth: string[]
@@ -28,27 +28,20 @@ function ApexPieChart({
     const [options, setOptions] = useState({})
 
     useEffect(() => {
-        const series = _.map(data, seriesKey)
-        const labels = _.map(data, labelsKey)
+        const series = lodashMap(data, seriesKey)
+        const labels = lodashMap(data, labelsKey)
         const breakpoints = [640, 768, 1024, 1280]
-        const responsiveOptions = _.map(breakpoints, (item, index) => {
+        const responsiveOptions = lodashMap(breakpoints, (item, index) => {
             return {
                 breakpoint: item,
                 options: {
                     chart: {
-                        width:
-                            responsiveWidth && responsiveWidth[index]
-                                ? responsiveWidth[index]
-                                : 'auto',
-                        height:
-                            responsiveHeight && responsiveHeight[index]
-                                ? responsiveHeight[index]
-                                : 'auto',
+                        width: responsiveWidth && responsiveWidth[index] ? responsiveWidth[index] : 'auto',
+                        height: responsiveHeight && responsiveHeight[index] ? responsiveHeight[index] : 'auto',
                     },
                     legend: {
                         position:
-                            responsiveLegendPosition &&
-                            responsiveLegendPosition[index]
+                            responsiveLegendPosition && responsiveLegendPosition[index]
                                 ? responsiveLegendPosition[index]
                                 : 'bottom',
                     },

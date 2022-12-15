@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 
 import Link from 'next/link'
-import _ from 'lodash'
+import lodashMap from 'lodash/map'
 import { menuOptions } from '@/utils/menuOptions'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -13,7 +13,7 @@ function Header({ pageTitle }: IHeaderProps): JSX.Element {
     const { signout } = useAuth()
 
     const headerMenuOptions = useMemo(() => {
-        return _.map(menuOptions, (menuOption) => {
+        return lodashMap(menuOptions, (menuOption) => {
             return (
                 <li key={menuOption.key}>
                     <Link
@@ -62,14 +62,10 @@ function Header({ pageTitle }: IHeaderProps): JSX.Element {
                                 {headerMenuOptions}
                             </ul>
                         </div>
-                        <p className='normal-case text-xl font-bold ml-1 sm:ml-4'>
-                            Revenda de carros
-                        </p>
+                        <p className='normal-case text-xl font-bold ml-1 sm:ml-4'>Revenda de carros</p>
                     </div>
                     <div className='navbar-center hidden lg:flex'>
-                        <ul className='menu menu-horizontal p-0'>
-                            {headerMenuOptions}
-                        </ul>
+                        <ul className='menu menu-horizontal p-0'>{headerMenuOptions}</ul>
                     </div>
                     <div className='navbar-end ml-2 sm:ml-0 w-auto sm:w-1/2'>
                         <button
@@ -80,9 +76,7 @@ function Header({ pageTitle }: IHeaderProps): JSX.Element {
                         </button>
                     </div>
                 </div>
-                <h1 className='mt-12 text-3xl font-bold text-white'>
-                    {pageTitle}
-                </h1>
+                <h1 className='mt-12 text-3xl font-bold text-white'>{pageTitle}</h1>
             </div>
         </header>
     )

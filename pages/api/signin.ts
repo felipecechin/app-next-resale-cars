@@ -1,18 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
+import FetchError from '@/utils/FetchError'
 import fetcher from '@/utils/fetcher'
 import { storeToken } from '@/utils/cookies'
 
-interface IFetchResultLoginUser {
-    id: number
-    name: string
-    email: string
-}
-
 interface IFetchResponseLoginSuccess {
     access_token: string
-    token_type: string
-    user: IFetchResultLoginUser
 }
 
 interface IRequestBody {
@@ -20,27 +13,31 @@ interface IRequestBody {
     password: string
 }
 
-type TResponseJson = {
-    data: string
+interface INextApiRequestWithBody extends NextApiRequest {
+    body: IRequestBody
 }
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<TResponseJson>
-): Promise<void> {
+export default async function handler(req: INextApiRequestWithBody, res: NextApiResponse): Promise<void> {
     if (req.method === 'POST') {
-        const body: IRequestBody = req.body
+        try {
+            const response = (await fetcher({
+                method: 'POST',
+                url: '/users/login',
+                data: {
+                    email: req.body.email,
+                    password: req.body.password,
+                },
+            })) as IFetchResponseLoginSuccess
 
-        const response = (await fetcher({
-            method: 'POST',
-            url: '/auth/login',
-            data: {
-                email: body.email,
-                password: body.password,
-            },
-        })) as IFetchResponseLoginSuccess
-
-        storeToken(res, response.access_token)
-        return res.json({ data: response.access_token })
+            storeToken(res, response.access_token)
+            return res.json({ data: response.access_token })
+        } catch (e) {
+            if (e instanceof FetchError) {
+                return res.status(e.status).json(e.data)
+            }
+            return res.status(500).json({
+                message: 'Unkown error',
+            })
+        }
     }
 }
