@@ -1,5 +1,6 @@
 import * as yup from 'yup'
 
+import { showSwalError, showSwalLoading, showSwalSuccess } from '@/utils/reactSwal'
 import { useCallback, useEffect } from 'react'
 
 import Drawer from '@/components/shared/Drawer'
@@ -9,8 +10,6 @@ import { SubmitHandler } from 'react-hook-form'
 import { TCar } from '@/types/cars'
 import fetcher from '@/utils/fetcher'
 import lodashIsEmpty from 'lodash/isEmpty'
-import { reactSwal } from '@/utils/reactSwal'
-import { sweetAlertOptions } from '@/utils/sweetAlertOptions'
 import { useAuth } from '@/contexts/AuthContext'
 import { useFormWithSchema } from '@/hooks/useFormWithSchema'
 import { yupMessages } from '@/utils/yupMessages'
@@ -59,12 +58,7 @@ function DrawerCarForm({ open, onClose, carSelectedToUpdate, onCarSaved }: IDraw
 
     const submitCarForm = useCallback<SubmitHandler<yup.Asserts<typeof carSchema>>>(
         async (data): Promise<void> => {
-            reactSwal.fire({
-                title: 'Por favor, aguarde...',
-                allowEscapeKey: false,
-                allowOutsideClick: false,
-            })
-            reactSwal.showLoading(null)
+            showSwalLoading()
             try {
                 let method = 'POST'
                 let url = '/cars'
@@ -80,12 +74,7 @@ function DrawerCarForm({ open, onClose, carSelectedToUpdate, onCarSaved }: IDraw
                     auth: token,
                 })
 
-                reactSwal.fire({
-                    title: 'Sucesso!',
-                    icon: 'success',
-                    text: 'Carro guardado com sucesso!',
-                    confirmButtonColor: sweetAlertOptions.confirmButtonColor,
-                })
+                showSwalSuccess('Carro guardado com sucesso!')
                 if (!lodashIsEmpty(carSelectedToUpdate)) {
                     onCarSaved('update', {
                         id: carSelectedToUpdate.id,
@@ -96,12 +85,7 @@ function DrawerCarForm({ open, onClose, carSelectedToUpdate, onCarSaved }: IDraw
                 }
                 onClose()
             } catch (e) {
-                reactSwal.fire({
-                    title: 'Oops!',
-                    icon: 'error',
-                    text: 'Ocorreu algum erro',
-                    confirmButtonColor: sweetAlertOptions.confirmButtonColor,
-                })
+                showSwalError('Ocorreu algum erro')
             }
         },
         [carSelectedToUpdate, onCarSaved, onClose, token]

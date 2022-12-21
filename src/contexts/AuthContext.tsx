@@ -1,8 +1,7 @@
+import { closeSwal, showSwalError, showSwalLoading } from '@/utils/reactSwal'
 import { createContext, useContext, useEffect, useState } from 'react'
 
 import fetcher from '@/utils/fetcher'
-import { reactSwal } from '@/utils/reactSwal'
-import { sweetAlertOptions } from '@/utils/sweetAlertOptions'
 import { useRouter } from 'next/router'
 
 type TAuthContextData = {
@@ -53,12 +52,7 @@ export function AuthProvider({ children }: IAuthProviderProps): JSX.Element {
     }, [])
 
     const signin = async (email: string, password: string): Promise<void> => {
-        reactSwal.fire({
-            title: 'Por favor, aguarde...',
-            allowEscapeKey: false,
-            allowOutsideClick: false,
-        })
-        reactSwal.showLoading(null)
+        showSwalLoading()
         try {
             const response = (await fetcher({
                 url: '/api/signin',
@@ -68,7 +62,7 @@ export function AuthProvider({ children }: IAuthProviderProps): JSX.Element {
             })) as ISigninResponse
 
             setToken(response.data)
-            reactSwal.close()
+            closeSwal()
             const { redirect } = router.query
             if (redirect) {
                 router.push(redirect as string)
@@ -76,12 +70,7 @@ export function AuthProvider({ children }: IAuthProviderProps): JSX.Element {
                 router.push('/')
             }
         } catch (e) {
-            reactSwal.fire({
-                title: 'Oops!',
-                icon: 'error',
-                text: 'E-mail e/ou senha inválidos',
-                confirmButtonColor: sweetAlertOptions.confirmButtonColor,
-            })
+            showSwalError('E-mail e/ou senha inválidos')
         }
     }
 
@@ -96,12 +85,7 @@ export function AuthProvider({ children }: IAuthProviderProps): JSX.Element {
     }
 
     const signup = async (name: string, email: string, password: string, confirmPassword: string): Promise<void> => {
-        reactSwal.fire({
-            title: 'Salvando dados e logando. Aguarde...',
-            allowEscapeKey: false,
-            allowOutsideClick: false,
-        })
-        reactSwal.showLoading(null)
+        showSwalLoading('Salvando dados e logando. Aguarde...')
         try {
             const response = (await fetcher({
                 url: '/api/signup',
@@ -116,7 +100,7 @@ export function AuthProvider({ children }: IAuthProviderProps): JSX.Element {
             })) as ISignupResponse
 
             setToken(response.data)
-            reactSwal.close()
+            closeSwal()
             const { redirect } = router.query
             if (redirect) {
                 router.push(redirect as string)
@@ -124,12 +108,7 @@ export function AuthProvider({ children }: IAuthProviderProps): JSX.Element {
                 router.push('/')
             }
         } catch (e) {
-            reactSwal.fire({
-                title: 'Oops!',
-                icon: 'error',
-                text: 'Ocorreu algum erro',
-                confirmButtonColor: sweetAlertOptions.confirmButtonColor,
-            })
+            showSwalError('Ocorreu algum erro')
         }
     }
 

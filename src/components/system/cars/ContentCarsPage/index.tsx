@@ -1,4 +1,11 @@
 import { FaPlus, FaSearch } from 'react-icons/fa'
+import reactSwal, {
+    closeSwal,
+    showSwalError,
+    showSwalLoading,
+    showSwalSuccess,
+    sweetAlertOptions,
+} from '@/utils/reactSwal'
 import { useCallback, useMemo, useRef, useState } from 'react'
 
 import DrawerCarForm from './DrawerCarForm'
@@ -7,8 +14,6 @@ import Table from '@/components/shared/Table'
 import TableManagementButtons from '@/components/shared/TableManagementButtons'
 import fetcher from '@/utils/fetcher'
 import lodashMap from 'lodash/map'
-import { reactSwal } from '@/utils/reactSwal'
-import { sweetAlertOptions } from '@/utils/sweetAlertOptions'
 import { useAuth } from '@/contexts/AuthContext'
 
 const carsTableHeader = [
@@ -83,12 +88,7 @@ function ContentCarsPage({ cars, total }: IContentCarsPageProps): JSX.Element {
             }
 
             if (showSweetAlertLoading) {
-                reactSwal.fire({
-                    title: 'Por favor, aguarde...',
-                    allowEscapeKey: false,
-                    allowOutsideClick: false,
-                })
-                reactSwal.showLoading(null)
+                showSwalLoading()
             } else {
                 setLoadingCars(true)
             }
@@ -105,17 +105,12 @@ function ContentCarsPage({ cars, total }: IContentCarsPageProps): JSX.Element {
                     actualPage: page,
                 })
                 if (showSweetAlertLoading) {
-                    reactSwal.close()
+                    closeSwal()
                 } else {
                     setLoadingCars(false)
                 }
             } catch (e) {
-                reactSwal.fire({
-                    title: 'Oops!',
-                    icon: 'error',
-                    text: 'Ocorreu algum erro ao buscar os dados',
-                    confirmButtonColor: sweetAlertOptions.confirmButtonColor,
-                })
+                showSwalError('Ocorreu algum erro ao buscar os dados')
             }
         },
         [token]
@@ -136,12 +131,7 @@ function ContentCarsPage({ cars, total }: IContentCarsPageProps): JSX.Element {
                 })
                 .then(async (result) => {
                     if (result.isConfirmed) {
-                        reactSwal.fire({
-                            title: 'Por favor, aguarde...',
-                            allowEscapeKey: false,
-                            allowOutsideClick: false,
-                        })
-                        reactSwal.showLoading(null)
+                        showSwalLoading()
                         try {
                             await fetcher({
                                 method: 'DELETE',
@@ -149,20 +139,10 @@ function ContentCarsPage({ cars, total }: IContentCarsPageProps): JSX.Element {
                                 auth: token,
                             })
 
-                            reactSwal.fire({
-                                title: 'Sucesso!',
-                                icon: 'success',
-                                text: 'Carro deletado com sucesso',
-                                confirmButtonColor: sweetAlertOptions.confirmButtonColor,
-                            })
+                            showSwalSuccess('Carro deletado com sucesso!')
                             handleSearchCars(1, false, false)
                         } catch (e) {
-                            reactSwal.fire({
-                                title: 'Oops!',
-                                icon: 'error',
-                                text: 'Ocorreu algum erro ao remover carro',
-                                confirmButtonColor: sweetAlertOptions.confirmButtonColor,
-                            })
+                            showSwalError('Ocorreu algum erro ao remover carro')
                         }
                     }
                 })

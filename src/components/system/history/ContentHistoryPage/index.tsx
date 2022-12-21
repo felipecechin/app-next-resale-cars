@@ -1,3 +1,4 @@
+import { closeSwal, showSwalError, showSwalLoading } from '@/utils/reactSwal'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { TAction } from '@/types/actions'
@@ -5,8 +6,6 @@ import Table from '@/components/shared/Table'
 import fetcher from '@/utils/fetcher'
 import { getFormattedDateHour } from '@/utils/getFormattedDateHour'
 import lodashMap from 'lodash/map'
-import { reactSwal } from '@/utils/reactSwal'
-import { sweetAlertOptions } from '@/utils/sweetAlertOptions'
 import { useAuth } from '@/contexts/AuthContext'
 
 const historyTableHeader = [
@@ -72,12 +71,7 @@ function ContentHistoryPage({ actions, total }: IContentHistoryPageProps): JSX.E
                 queryParams = queryParams + '&type=' + filterAction.current.value
             }
 
-            reactSwal.fire({
-                title: 'Por favor, aguarde...',
-                allowEscapeKey: false,
-                allowOutsideClick: false,
-            })
-            reactSwal.showLoading(null)
+            showSwalLoading()
             try {
                 const response = (await fetcher({
                     method: 'GET',
@@ -90,14 +84,9 @@ function ContentHistoryPage({ actions, total }: IContentHistoryPageProps): JSX.E
                     total: response.total,
                     actualPage: page,
                 })
-                reactSwal.close()
+                closeSwal()
             } catch (e) {
-                reactSwal.fire({
-                    title: 'Oops!',
-                    icon: 'error',
-                    text: 'Ocorreu algum erro ao buscar os dados',
-                    confirmButtonColor: sweetAlertOptions.confirmButtonColor,
-                })
+                showSwalError('Ocorreu algum erro ao buscar os dados')
             }
         },
         [token]
@@ -114,12 +103,7 @@ function ContentHistoryPage({ actions, total }: IContentHistoryPageProps): JSX.E
 
                 setUsers(response.users)
             } catch (e) {
-                reactSwal.fire({
-                    title: 'Oops!',
-                    icon: 'error',
-                    text: 'Ocorreu algum erro ao buscar os usuários',
-                    confirmButtonColor: sweetAlertOptions.confirmButtonColor,
-                })
+                showSwalError('Ocorreu algum erro ao buscar os usuários')
             }
         }
         if (token) {
