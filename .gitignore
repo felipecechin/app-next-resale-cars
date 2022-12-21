@@ -39,3 +39,4 @@ yarn.lock
 
 .vscode
 .env
+package-lock.json
